@@ -3,9 +3,11 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import Customers from './pages/Customers'
+import { AuthProvider } from './context/AuthContext'
 
 function App() {
   return (
+    <AuthProvider>
     <BrowserRoutes>
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
@@ -15,5 +17,6 @@ function App() {
       <Route path="/customers" element={<Customers />} />
     </Routes>
     </BrowserRoutes>
+    </AuthProvider>
   )
 }
