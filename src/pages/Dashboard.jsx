@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getDashboardStats, getCustomers } from './services/api'
-import StatCard from './components/StatCard'
+import { getDashboardStats, getCustomers } from '../services/api'
 
 function Dashboard() {
   const [stats, setStats] = useState(null)
@@ -31,7 +30,7 @@ function Dashboard() {
 
   return (
     <div>
-      //header
+      {/*header*/}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">
@@ -44,7 +43,7 @@ function Dashboard() {
         </div>
       </div>
 
-      //stat cards
+      {/*stat cards*/}
       <div className="grid grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Total Customers"
@@ -75,7 +74,7 @@ function Dashboard() {
         />
       </div>
 
-      //recent customers
+      {/*recent customers*/}
       <div className="bg-white rounded-xl p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold text-gray-800">
@@ -124,7 +123,22 @@ function Dashboard() {
         </div>
       </div>
     </div>
-  )
+   )
 }
+{/*Statcard being a small component defined in the same file for now temporarily*/}
+ function StatCard({title, value, change, color}) {
+        return (
+            <div className="bg-white rounded-xl p-5 border border-gray-100">
+                <div className="flex items-center gap-3 mb-3">
+                <div className={`${color} w-9 h-9 rounded-lg flex items-center justify-center`}>
+                    <span className="text-sm text-gray-500">{title}</span>
+                </div>
+                <span className="text-sm text-gray-500">{title}</span>
+                </div>
+                <p className="text-2xl font-bold text-gray-800 mb-1">{value}</p>
+                <p className="text-xs text-green-500">↑ {change} vs last week</p>
+            </div>
+        )
+    }
 
 export default Dashboard
