@@ -125,7 +125,7 @@ function Dashboard() {
     </div>
    )
 }
-{/*Statcard being a small component defined in the same file for now temporarily*/}
+//Statcard being a small component defined in the same file for now temporarily
  function StatCard({title, value, change, color}) {
         return (
             <div className="bg-white rounded-xl p-5 border border-gray-100">
