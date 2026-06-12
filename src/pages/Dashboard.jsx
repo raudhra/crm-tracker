@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react'
 import { getDashboardStats, getCustomers } from '../services/api'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { getDashboardStats, getCustomers, getRevenueData } from '../services/api'
 
 function Dashboard() {
   const [stats, setStats] = useState(null)
   const [customers, setCustomers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [revenueData, setRevenueData] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const statsData = await getDashboardStats()
         const customersData = await getCustomers()
-
+        const revenue = await getRevenueData()
+        setRevenueData(revenue)
         setStats(statsData)
         setCustomers(customersData)
       } catch (error) {
@@ -68,10 +72,28 @@ function Dashboard() {
 
         <StatCard
           title="Tasks Completed"
-          value={`${stats?.taskCompleted ?? 0}%`}
+          value={`${stats?.tasksCompleted ?? 0}%`}
           change="15.2%"
           color="bg-blue-500"
         />
+      </div>
+      {/* Revenue Chart */}
+      <div className="bg-white rounded-xl p-6 border border-gray-100 mb-8">
+        <h2 className="font-semibold text-gray-800 mb-4">Revenue Overview</h2>
+        <ResponsiveContainer width="100%" height={250}>
+          <AreaChart data={revenueData}>
+            <defs>
+                <linearGradient id="colorRevenue" x1="0" y1="0" y2="1">
+                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0,3} />
+                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                </linearGradient>
+            </defs>
+            <XAxis dataKey="date" stroke="#9ca3af" fontSize={12} />
+            <YAxis stroke="#9ca3af" fontSize={12} />
+            <Tooltip />
+            <Area type="monotone" dataKey="revenue" stroke="#6366f1" fill="url(#colorRevenue)" strokeWidth={2} />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
 
       {/*recent customers*/}
@@ -131,7 +153,7 @@ function Dashboard() {
             <div className="bg-white rounded-xl p-5 border border-gray-100">
                 <div className="flex items-center gap-3 mb-3">
                 <div className={`${color} w-9 h-9 rounded-lg flex items-center justify-center`}>
-                    <span className="text-sm text-gray-500">{title}</span>
+                    <span className="text-sm text-white">◆</span>
                 </div>
                 <span className="text-sm text-gray-500">{title}</span>
                 </div>

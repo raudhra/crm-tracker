@@ -60,3 +60,14 @@ export const getDashboardStats = async () => {
     tasksCompleted: 86
   }
 }
+export const getRevenueData = async () => {
+  return [
+    { date: 'May 1', revenue: 12000 },
+    { date: 'May 6', revenue: 18000 },
+    { date: 'May 11', revenue: 22000 },
+    { date: 'May 16', revenue: 19000 },
+    { date: 'May 21', revenue: 28000 },
+    { date: 'May 26', revenue: 24000 },
+    { date: 'May 31', revenue: 42000 },
+  ]
+}
