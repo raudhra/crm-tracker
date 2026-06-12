@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { getDashboardStats, getCustomers } from '../services/api'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { getDashboardStats, getCustomers, getRevenueData } from '../services/api'
 
