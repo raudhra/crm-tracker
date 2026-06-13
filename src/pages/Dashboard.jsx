@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { getDashboardStats, getCustomers, getRevenueData } from '../services/api'
+import { getDashboardStats, getCustomers, getRevenueData, getTasksOverview, getDealsByStage, getUpcomingTasks } from '../services/api'
+import { PieChart, Pie, Cell } from 'recharts'
 
 function Dashboard() {
   const [stats, setStats] = useState(null)
   const [customers, setCustomers] = useState([])
   const [loading, setLoading] = useState(true)
   const [revenueData, setRevenueData] = useState([])
+  const [tasksOverview, setTasksOverview] = useState([])
+  const [dealsByStage, setDealsByStage] = useState([])
+  const [upcomingTasks, setUpcomingTasks] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,9 +18,15 @@ function Dashboard() {
         const statsData = await getDashboardStats()
         const customersData = await getCustomers()
         const revenue = await getRevenueData()
+        const tasksData = await getTasksOverview()
+        const dealsData = await getDealsByStage()
+        const tasksListData = await getUpcomingTasks()
         setRevenueData(revenue)
         setStats(statsData)
         setCustomers(customersData)
+        setTasksOverview(tasksData)
+        setDealsByStage(dealsData)
+        setUpcomingTasks(tasksListData)
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error)
       } finally {

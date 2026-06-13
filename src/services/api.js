@@ -71,3 +71,29 @@ export const getRevenueData = async () => {
     { date: 'May 31', revenue: 42000 },
   ]
 }
+export const getTasksOverview = async () => {
+  return [
+    { name: 'Completed', value: 14, color: '#22c55e' },
+    { name: 'In Progress', value: 6, color: '#3b82f6' },
+    { name: 'Pending', value: 4, color: '#eab308' },
+  ]
+}
+
+export const getDealsByStage = async () => {
+  return [
+    { stage: 'Leads', count: 120, color: '#6366f1' },
+    { stage: 'Qualified', count: 84, color: '#3b82f6' },
+    { stage: 'Proposal', count: 56, color: '#22c55e' },
+    { stage: 'Negotiation', count: 34, color: '#eab308' },
+    { stage: 'Closed', count: 18, color: '#ef4444' },
+  ]
+}
+
+export const getUpcomingTasks = async () => {
+  return [
+    { id: 1, title: 'Follow up with Acme Corporation', date: 'May 19, 2024', done: false },
+    { id: 2, title: 'Prepare proposal for Globex', date: 'May 20, 2024', done: false },
+    { id: 3, title: 'Monthly report for stakeholders', date: 'May 22, 2024', done: true },
+    { id: 4, title: 'Review contract – Initech LLC', date: 'May 23, 2024', done: true },
+  ]
+}
