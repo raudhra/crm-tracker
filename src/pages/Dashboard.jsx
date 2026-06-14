@@ -93,7 +93,7 @@ function Dashboard() {
           <AreaChart data={revenueData}>
             <defs>
                 <linearGradient id="colorRevenue" x1="0" y1="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0,3} />
+                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
                   <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                 </linearGradient>
             </defs>
@@ -153,88 +153,94 @@ function Dashboard() {
           ))}
         </div>
       </div>
-      {/* Tasks Overview, Deals by stage , Upcoming tasks: Funnel + Donut*/}
-      <div className="grid grid-cols-3 gap-6 mt-8">  
-        {/*Tasks Overview: Donut*/}
-        <div className="bg-white rounded-xl p-6 border border-gray-100"></div> 
-        <h2 className="font-semibold text-gray-800 mb-4">Tasks Overview</h2>  
-        <div className="flex items-center justify-center relative"></div>
-        <PieChart width={100} height={100}>
-          <Pie
-              data={tasksOverview}
-              dataKey="value"
-              innerRadius={50}
-              outerRadius={72}
-              paddingAngle={2}
+      {/* Tasks Overview, Deals by Stage, Upcoming Tasks */}
+      <div className="grid grid-cols-3 gap-6 mt-8">
+
+        {/* Tasks Overview: Donut */}
+        <div className="bg-white rounded-xl p-6 border border-gray-100">
+          <h2 className="font-semibold text-gray-800 mb-4">Tasks Overview</h2>
+          <div className="flex items-center justify-center relative">
+            <PieChart width={160} height={160}>
+              <Pie
+                data={tasksOverview}
+                dataKey="value"
+                innerRadius={50}
+                outerRadius={75}
+                paddingAngle={2}
               >
-                {tasksOverview.map((entry,index) => (
+                {tasksOverview.map((entry, index) => (
                   <Cell key={index} fill={entry.color} />
                 ))}
               </Pie>
-        </PieChart>
-        <div className="absolute flex flex-col items-center">
-          <p className="text-2xl font-bold text-gray-800">
-            {tasksOverview.reduce((sum,t) => sum + t.value, 0)}
-          </p>
-          <p className="text-xs text-gray-400"> Total Tasks </p>
-        </div>
-      </div>
-       <div className="flex flex-col gap-2 mt-4">
-        {tasksOverview.map((task) => (
-          <div key={task.name} className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: task.color }}></span>
-              <span className="text-gray-600">{task.name}</span>
+            </PieChart>
+            <div className="absolute flex flex-col items-center">
+              <p className="text-2xl font-bold text-gray-800">
+                {tasksOverview.reduce((sum, t) => sum + t.value, 0)}
+              </p>
+              <p className="text-xs text-gray-400">Total Tasks</p>
             </div>
-            <span className="text-gray-800 font-medium">{task.value}</span>
           </div>
-        ))}
-      </div>
-    </div>
-    {/*Deals by stage: funnel */}
-    <div className="bg-white rounded-xl p-6 border border-gray-600">
-      <h2 className="font-semibold text-gray-800 mb-4"> Deals By Stage</h2>
-      <div className="flex flex-col gap-2">
-        {dealsByStage.map((deal,index) => {
-          <div key={deal.stage} className="flex items-center gap-3">
-            <div
-                className="h-8 rounded flex items-center px-3 text-white text-xs font-medium"
-                style={{
-                  backgroundColor: deal.color,
-                  width: `${100 - index * 15}%`
-                }}
+          <div className="flex flex-col gap-2 mt-4">
+            {tasksOverview.map((task) => (
+              <div key={task.name} className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: task.color }}></span>
+                  <span className="text-gray-600">{task.name}</span>
+                </div>
+                <span className="text-gray-800 font-medium">{task.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Deals by Stage: Funnel */}
+        <div className="bg-white rounded-xl p-6 border border-gray-100">
+          <h2 className="font-semibold text-gray-800 mb-4">Deals by Stage</h2>
+          <div className="flex flex-col gap-2">
+            {dealsByStage.map((deal, index) => (
+              <div key={deal.stage} className="flex items-center gap-3">
+                <div
+                  className="h-8 rounded flex items-center px-3 text-white text-xs font-medium"
+                  style={{
+                    backgroundColor: deal.color,
+                    width: `${100 - index * 15}%`
+                  }}
                 >
                   {deal.stage}
+                </div>
+                <span className="text-sm text-gray-600">{deal.count}</span>
               </div>
-              <span className="text-sm text-gray-600">{deal.count}</span>
-              </div>
-        })}
-      </div>
-    </div>
-    {/*Upcoming Tasks */}
-      <div className="bg-white rounded-xl p-6 border border-gray-100">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-gray-800">Upcoming Tasks</h2>
-        <a href="/tasks" className="text-indigo-600 text-sm">View all</a>
-      </div>
-      <div className="flex flex-col gap-3">
-        {upcomingTasks.map((task) => (
-          <div key={task.id} className="flex items-center gap-3">
-            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center
-              ${task.done ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>
-              {task.done && <span className="text-white text-xs">✓</span>}
-            </div>
-            <div className="flex-1">
-              <p className={`text-sm ${task.done ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
-                {task.title}
-              </p>
-            </div>
-            <span className="text-xs text-gray-400">{task.date}</span>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Upcoming Tasks */}
+        <div className="bg-white rounded-xl p-6 border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-gray-800">Upcoming Tasks</h2>
+            <a href="/tasks" className="text-indigo-600 text-sm">View all</a>
+          </div>
+          <div className="flex flex-col gap-3">
+            {upcomingTasks.map((task) => (
+              <div key={task.id} className="flex items-center gap-3">
+                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center
+                  ${task.done ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>
+                  {task.done && <span className="text-white text-xs">✓</span>}
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${task.done ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                    {task.title}
+                  </p>
+                </div>
+                <span className="text-xs text-gray-400">{task.date}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
-   )
+  )
 }
 //Statcard being a small component defined in the same file for now temporarily
  function StatCard({title, value, change, color}) {
