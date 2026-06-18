@@ -25,7 +25,15 @@ function Customers() {
     }
     );
     return (
-        <div>
+            <div>
+                    <AddCustomerModal
+            isOpen={addCustomer}
+            onClose={() => setAddCustomer(false)}
+            onSubmit={(newCustomer) => {
+                setCustomers([...customers, { ...newCustomer, id: Date.now() }])
+                setAddCustomer(false)
+            }}
+            />
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-2xl font-bold text-gray-800">
                     Customers
@@ -61,27 +69,31 @@ function Customers() {
                         </tr>
                     </thead>
                     <tbody>
-                        {getCustomersWithDetails.map}(customer => (
-                            <tr key = {getCustomersWithDetails.id} className="border-b">
+                        {filteredCustomers.map(customer => (
+                            <tr key = {customer.id} className="border-b">
                                 <td>
-                                     getCustomersWithDetails.avatar ? (
-                                    <img src={getCustomersWithDetails.avatar} 
-                                    alt="getCustomersWithDetails.name" 
+                                    {customer.avatar ? (
+                                    <img src={customer.avatar} 
+                                    alt="customer.name" 
                                     className="w-10 h-10 rounded-full object-cover" 
                                         />
                                     ) : (
                                     <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center">
-                                            {getCustomersWithDetails.name[0].toUpperCase()}
+                                            {customer.name[0].toUpperCase()}
                                     </div>
-                                    )    
+                                    )    }
                                 </td>
-                                <td className="p-3">{getCustomersWithDetails.name} + " " + {getCustomersWithDetails.email}</td>
-                                <td className="p-3">{getCustomersWithDetails.phone}</td>
-                                <td className="p-3">{getCustomersWithDetails.status}</td>
-                                <td className="p-3">{getCustomersWithDetails.lastContact}</td>
+                                <td className="p-3">
+                                    <p className="font-medium text-gray-800">{customer.name}</p>
+                                    <p className="text-xs text-gray-400">{customer.email}</p>
+                                </td>
+                                <td className="p-3">{customer.phone}</td>
+                                <td className="p-3">{customer.status}</td>
+                                <td className="p-3">{customer.lastContact}</td>
                                 <td className="p-3"><button>:</button></td>
                             </tr>
                         ))
+                    }
                     </tbody>
                 </table>
                 
@@ -90,3 +102,21 @@ function Customers() {
     )
     
 }
+function AddCustomerModal({isOpen, onClose, onSubmit }) {
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+        if (!isOpen) return null
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl p-6 w-full max-w-md">
+                            <h2>Add Custom</h2>
+                                <input value = {name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" />
+                                <input value = {email} onChange = {(e) => setEmail(e.target.value)} placeholder = "Email" />
+                                <button  onClick={onClose}>Cancel</button>
+                                <button onClick={() => onSubmit({ name, email})}>Save</button>
+                        </div>
+                    </div>
+             )
+     }
+                
+export default Customers;
