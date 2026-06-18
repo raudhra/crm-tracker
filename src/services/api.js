@@ -97,3 +97,16 @@ export const getUpcomingTasks = async () => {
     { id: 4, title: 'Review contract – Initech LLC', date: 'May 23, 2024', done: true },
   ]
 }
+
+export const getCustomersWithDetails = async () => {
+  return [
+    { id: 1, name: 'Acme Corporation', email: 'info@acme.com', phone: '(555) 123-4567', status: 'Active', lastContact: 'May 18, 2024' },
+    { id: 2, name: 'Globex Solutions', email: 'hello@globex.com', phone: '(555) 987-6543', status: 'Active', lastContact: 'May 17, 2024' },
+    { id: 3, name: 'Initech LLC', email: 'contact@initech.com', phone: '(555) 456-7890', status: 'Pending', lastContact: 'May 16, 2024' },
+    { id: 4, name: 'Umbrella Corp', email: 'support@umbrella.com', phone: '(555) 234-5678', status: 'Active', lastContact: 'May 15, 2024' },
+    { id: 5, name: 'Stark Industries', email: 'sales@stark.com', phone: '(555) 876-5432', status: 'Active', lastContact: 'May 14, 2024' },
+    { id: 6, name: 'Wayne Enterprises', email: 'contact@wayne.com', phone: '(555) 345-6789', status: 'Inactive', lastContact: 'May 13, 2024' },
+    { id: 7, name: 'Cyberdyne Systems', email: 'info@cyberdyne.com', phone: '(555) 654-3210', status: 'Active', lastContact: 'May 12, 2024' },
+    { id: 8, name: 'Hooli Corporation', email: 'hello@hooli.com', phone: '(555) 765-4321', status: 'Pending', lastContact: 'May 11, 2024' },
+  ]
+}
