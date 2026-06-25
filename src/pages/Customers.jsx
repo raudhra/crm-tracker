@@ -91,7 +91,7 @@ function Customers() {
                                     <p className="text-xs text-gray-400">{customer.email}</p>
                                 </td>
                                 <td className="px-4 py-3">{customer.phone}</td>
-                                <td className="px-4 py-3">{customer.status}</td>
+                                <td className="px-4 py-3"><span className={`text-xs px-2 py-1 rounded-full font-medium ${customer.status === 'Active' ? 'bg-green-50 text-green-600' : customer.status === 'Pending' ? 'bg-yellow-50 text-yellow-600' : 'bg-gray-100 text-gray-500}'}`}>{customer.status}</span></td>
                                 <td className="px-4 py-3">{customer.lastContact}</td>
                                 <td className="px-4 py-3"><button>:</button></td>
                             </tr>
@@ -112,11 +112,13 @@ function AddCustomerModal({isOpen, onClose, onSubmit }) {
             return (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl p-6 w-full max-w-md">
-                            <h2>Add Custom</h2>
-                                <input value = {name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" />
-                                <input value = {email} onChange = {(e) => setEmail(e.target.value)} placeholder = "Email" />
-                                <button  onClick={onClose}>Cancel</button>
-                                <button onClick={() => onSubmit({ name, email})}>Save</button>
+                            <h2 className="text-lg font-semibold text-gray-800 mb-4">Add Custom</h2>
+                                <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" value = {name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" />
+                                <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" value = {email} onChange = {(e) => setEmail(e.target.value)} placeholder = "Email" />
+                                <div className="flex gap-3 mt-4" >
+                                <button className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"  onClick={onClose}>Cancel</button>
+                                <button className="flex-1 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700" onClick={() => onSubmit({ name, email})}>Save</button>
+                                </div>
                         </div>
                     </div>
              )
