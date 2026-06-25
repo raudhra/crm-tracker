@@ -40,38 +40,41 @@ function Customers() {
                 </h1>
                 <p className="text-gray-500 text-sm mt-1">Here! Your Customers</p>
             </div>
-            <div>
+            <div className ="flex-items gap-3 mb-6">
                 <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder = "Search Customers..."
+                    className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-indigo-500 w-64"
                     />
                     {['All', 'Active', 'Pending', 'Inactive'].map(status => (
                         <button
                             key={status}
                             onClick={() => setFilter(status)}
-                            className={filter === status ? 'active styles' : 'inactive styles'}
+                            className={filter === status ? 'px-3 py-2 text-sm rounded-lg bg-indigo-600 text-white font-medium' : 
+                                'px-3 py-2 text-sm rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200'}
                             > {status} </button>
                     ))}
                     <button
-                    onClick={(e) => setAddCustomer(true)} > Add Customer </button>
+                    onClick={(e) => setAddCustomer(true)}
+                    className="ml-auto bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700" > Add Customer </button>
             </div>
-            <div>
+            <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
                 <table className="w-full border-collapse">
-                    <thead>
-                        <tr className="bg-gray-100">
-                            <th className="p-3 text-left">Profile</th>
-                            <th className="p-3 text-left">Name + Email</th>
-                            <th className="p-3 text-left">Phone</th>
-                            <th className="p-3 text-left">Status</th>
-                            <th className="p-3 text-left">Last Contact</th>
-                            <th className="p-3 text-left">Actions</th>
+                    <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+                        <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+                            <th className="px-4 py-3 text-left font-medium">Profile</th>
+                            <th className="px-4 py-3 text-left font-medium">Name + Email</th>
+                            <th className="px-4 py-3 text-left font-medium">Phone</th>
+                            <th className="px-4 py-3 text-left font-medium">Status</th>
+                            <th className="px-4 py-3 text-left font-medium">Last Contact</th>
+                            <th className="px-4 py-3 text-left font-medium">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredCustomers.map(customer => (
-                            <tr key = {customer.id} className="border-b">
-                                <td>
+                            <tr key = {customer.id} className="border-b border-gray-50 hover:bg-gray-50 transition">
+                                <td className="px-4 py-3">
                                     {customer.avatar ? (
                                     <img src={customer.avatar} 
                                     alt="customer.name" 
@@ -83,14 +86,14 @@ function Customers() {
                                     </div>
                                     )    }
                                 </td>
-                                <td className="p-3">
+                                <td className="px-4 py-3">
                                     <p className="font-medium text-gray-800">{customer.name}</p>
                                     <p className="text-xs text-gray-400">{customer.email}</p>
                                 </td>
-                                <td className="p-3">{customer.phone}</td>
-                                <td className="p-3">{customer.status}</td>
-                                <td className="p-3">{customer.lastContact}</td>
-                                <td className="p-3"><button>:</button></td>
+                                <td className="px-4 py-3">{customer.phone}</td>
+                                <td className="px-4 py-3">{customer.status}</td>
+                                <td className="px-4 py-3">{customer.lastContact}</td>
+                                <td className="px-4 py-3"><button>:</button></td>
                             </tr>
                         ))
                     }
