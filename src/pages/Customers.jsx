@@ -40,7 +40,7 @@ function Customers() {
                 </h1>
                 <p className="text-gray-500 text-sm mt-1">Here! Your Customers</p>
             </div>
-            <div className ="flex-items gap-3 mb-6">
+            <div className ="flex items-center gap-3 mb-6">
                 <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -91,7 +91,7 @@ function Customers() {
                                     <p className="text-xs text-gray-400">{customer.email}</p>
                                 </td>
                                 <td className="px-4 py-3">{customer.phone}</td>
-                                <td className="px-4 py-3"><span className={`text-xs px-2 py-1 rounded-full font-medium ${customer.status === 'Active' ? 'bg-green-50 text-green-600' : customer.status === 'Pending' ? 'bg-yellow-50 text-yellow-600' : 'bg-gray-100 text-gray-500}'}`}>{customer.status}</span></td>
+                                <td className="px-4 py-3"><span className={`text-xs px-2 py-1 rounded-full font-medium ${customer.status === 'Active' ? 'bg-green-50 text-green-600' : customer.status === 'Pending' ? 'bg-yellow-50 text-yellow-600' : 'bg-gray-100 text-gray-500'}`}>{customer.status}</span></td>
                                 <td className="px-4 py-3">{customer.lastContact}</td>
                                 <td className="px-4 py-3"><button>:</button></td>
                             </tr>
