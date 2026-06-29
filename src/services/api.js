@@ -1,33 +1,3 @@
-// const BASE_URL = 'http://localhost:8080'
-
-// const getHeaders =() => ({
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${localStorage.getItem('token')}`
-// })
-
-// export const loginUser = async (email,password) => {
-//     const response = await fetch(`${BASE_URL}/auth/login`, {
-//         method:'POST',
-//         headers: {'Content-Type': 'application/json' },
-//         body: JSON.stringify({ email, password})
-//     })
-//     return response.json()
-// }
-
-// export const getCustomers = async () => {
-//     const response = await fetch(`${BASE_URL}/customers`, {
-//         headers: getHeaders()
-//     })
-//     return response.json()
-// }
-
-// export const getDashboardStats = async () => {
-//     const response = await fetch(`${BASE_URL}/dashboard/stats`, {
-//         headers: getHeaders()
-//     })
-//     return response.json()
-// }
-
 const BASE_URL = 'http://localhost:8080'
 
 const getHeaders = () => ({
@@ -35,31 +5,103 @@ const getHeaders = () => ({
   'Authorization': `Bearer ${localStorage.getItem('token')}`
 })
 
+// Auth
 export const loginUser = async (email, password) => {
-  return {
-    token: 'fake-jwt-token',
-    user: { name: 'Rudra', email: email }
+  const response = await fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Login failed')
   }
+  return response.json()
 }
 
-export const getCustomers = async () => {
-  return [
-    { id: 1, name: 'Acme Corporation', email: 'info@acme.com', status: 'Active', createdAt: '2024-05-18' },
-    { id: 2, name: 'Globex Solutions', email: 'hello@globex.com', status: 'Active', createdAt: '2024-05-17' },
-    { id: 3, name: 'Initech LLC', email: 'contact@initech.com', status: 'Pending', createdAt: '2024-05-16' },
-    { id: 4, name: 'Umbrella Corp', email: 'support@umbrella.com', status: 'Active', createdAt: '2024-05-15' },
-    { id: 5, name: 'Stark Industries', email: 'sales@stark.com', status: 'Active', createdAt: '2024-05-14' },
-  ]
+export const signupUser = async (name, email, password) => {
+  const response = await fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password })
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Signup failed')
+  }
+  return response.json()
 }
 
+export const getProfile = async () => {
+  const response = await fetch(`${BASE_URL}/auth/me`, {
+    headers: getHeaders()
+  })
+  if (!response.ok) throw new Error('Failed to fetch profile')
+  return response.json()
+}
+
+export const updateProfile = async (data) => {
+  const response = await fetch(`${BASE_URL}/auth/profile`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  })
+  if (!response.ok) throw new Error('Failed to update profile')
+  return response.json()
+}
+
+// Customers
+export const getCustomers = async (search = '', status = '') => {
+  const query = new URLSearchParams()
+  if (search) query.append('search', search)
+  if (status && status !== 'All') query.append('status', status)
+  
+  const response = await fetch(`${BASE_URL}/customers?${query.toString()}`, {
+    headers: getHeaders()
+  })
+  if (!response.ok) throw new Error('Failed to fetch customers')
+  return response.json()
+}
+
+export const createCustomer = async (data) => {
+  const response = await fetch(`${BASE_URL}/customers`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  })
+  if (!response.ok) throw new Error('Failed to create customer')
+  return response.json()
+}
+
+export const updateCustomer = async (id, data) => {
+  const response = await fetch(`${BASE_URL}/customers/${id}`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  })
+  if (!response.ok) throw new Error('Failed to update customer')
+  return response.json()
+}
+
+export const deleteCustomer = async (id) => {
+  const response = await fetch(`${BASE_URL}/customers/${id}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  })
+  if (!response.ok) throw new Error('Failed to delete customer')
+  return response.json()
+}
+
+// Dashboard
 export const getDashboardStats = async () => {
-  return {
-    totalCustomers: 1248,
-    revenue: 58432,
-    openDeals: 346,
-    tasksCompleted: 86
-  }
+  const response = await fetch(`${BASE_URL}/dashboard/stats`, {
+    headers: getHeaders()
+  })
+  if (!response.ok) throw new Error('Failed to fetch stats')
+  return response.json()
 }
+
+// Mock Data for Charts (Until backend supports these)
 export const getRevenueData = async () => {
   return [
     { date: 'May 1', revenue: 12000 },
@@ -71,6 +113,7 @@ export const getRevenueData = async () => {
     { date: 'May 31', revenue: 42000 },
   ]
 }
+
 export const getTasksOverview = async () => {
   return [
     { name: 'Completed', value: 14, color: '#22c55e' },
@@ -95,18 +138,5 @@ export const getUpcomingTasks = async () => {
     { id: 2, title: 'Prepare proposal for Globex', date: 'May 20, 2024', done: false },
     { id: 3, title: 'Monthly report for stakeholders', date: 'May 22, 2024', done: true },
     { id: 4, title: 'Review contract – Initech LLC', date: 'May 23, 2024', done: true },
-  ]
-}
-
-export const getCustomersWithDetails = async () => {
-  return [
-    { id: 1, name: 'Acme Corporation', email: 'info@acme.com', phone: '(555) 123-4567', status: 'Active', lastContact: 'May 18, 2024' },
-    { id: 2, name: 'Globex Solutions', email: 'hello@globex.com', phone: '(555) 987-6543', status: 'Active', lastContact: 'May 17, 2024' },
-    { id: 3, name: 'Initech LLC', email: 'contact@initech.com', phone: '(555) 456-7890', status: 'Pending', lastContact: 'May 16, 2024' },
-    { id: 4, name: 'Umbrella Corp', email: 'support@umbrella.com', phone: '(555) 234-5678', status: 'Active', lastContact: 'May 15, 2024' },
-    { id: 5, name: 'Stark Industries', email: 'sales@stark.com', phone: '(555) 876-5432', status: 'Active', lastContact: 'May 14, 2024' },
-    { id: 6, name: 'Wayne Enterprises', email: 'contact@wayne.com', phone: '(555) 345-6789', status: 'Inactive', lastContact: 'May 13, 2024' },
-    { id: 7, name: 'Cyberdyne Systems', email: 'info@cyberdyne.com', phone: '(555) 654-3210', status: 'Active', lastContact: 'May 12, 2024' },
-    { id: 8, name: 'Hooli Corporation', email: 'hello@hooli.com', phone: '(555) 765-4321', status: 'Pending', lastContact: 'May 11, 2024' },
   ]
 }
