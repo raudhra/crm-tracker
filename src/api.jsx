@@ -27,3 +27,40 @@ export const getDashboardStats = async () => {
   })
   return response.json()
 }
+
+export const getTasks = async (status, customerId) => {
+  let url = `${BASE_URL}/tasks`
+  const params = new URLSearchParams()
+  if (status) params.append('status', status)
+  if (customerId) params.append('customer_id', customerId)
+  if (params.toString()) url += `?${params.toString()}`
+  
+  const response = await fetch(url, { headers: getHeaders() })
+  return response.json()
+}
+
+export const createTask = async (taskData) => {
+  const response = await fetch(`${BASE_URL}/tasks`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(taskData)
+  })
+  return response.json()
+}
+
+export const updateTask = async (taskId, taskData) => {
+  const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(taskData)
+  })
+  return response.json()
+}
+
+export const deleteTask = async (taskId) => {
+  const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  })
+  return response.json()
+}

@@ -8,7 +8,8 @@ import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import Customers from './pages/Customers'
 import Settings from './pages/Settings'
-import { Tasks, Deals, Invoices, Analytics, Calendar, Messages } from './pages/Placeholders'
+import Tasks from './pages/Tasks'
+import { Deals, Invoices, Analytics, Calendar, Messages } from './pages/Placeholders'
 
 function App() {
   return (

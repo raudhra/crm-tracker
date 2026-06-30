@@ -8,6 +8,7 @@ import (
 	"crm-tracker/internal/customers"
 	"crm-tracker/internal/database"
 	"crm-tracker/internal/middleware"
+	"crm-tracker/internal/tasks"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -32,6 +33,11 @@ func main() {
 	customerRepo := customers.NewRepository(db)
 	customerService := customers.NewService(customerRepo)
 	customerHandler := customers.NewHandler(customerService)
+
+	// Initialize tasks layer
+	taskRepo := tasks.NewRepository(db)
+	taskService := tasks.NewService(taskRepo)
+	taskHandler := tasks.NewHandler(taskService)
 
 	// Setup Gin router
 	router := gin.Default()
@@ -64,6 +70,12 @@ func main() {
 		protected.GET("/customers/:id", customerHandler.GetByID)
 		protected.PUT("/customers/:id", customerHandler.Update)
 		protected.DELETE("/customers/:id", customerHandler.Delete)
+
+		protected.GET("/tasks", taskHandler.GetAll)
+		protected.POST("/tasks", taskHandler.Create)
+		protected.GET("/tasks/:id", taskHandler.GetByID)
+		protected.PUT("/tasks/:id", taskHandler.Update)
+		protected.DELETE("/tasks/:id", taskHandler.Delete)
 
 		protected.GET("/dashboard/stats", customerHandler.GetDashboardStats)
 	}
