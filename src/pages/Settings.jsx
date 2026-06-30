@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import { updateProfile } from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -22,8 +23,8 @@ function Settings() {
     <div className="pb-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Settings</h1>
-        <p className="text-gray-500 text-sm">Manage your account settings and preferences.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Settings</h1>
+        <p className="text-gray-500 dark:text-slate-400 text-sm">Manage your account settings and preferences.</p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
@@ -36,10 +37,10 @@ function Settings() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-colors
                   ${activeTab === tab.id
-                    ? 'bg-indigo-50 text-indigo-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
+                    ? 'bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400'
+                    : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-200'}`}
               >
-                <svg className={`w-5 h-5 ${activeTab === tab.id ? 'text-indigo-600' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${activeTab === tab.id ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-slate-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {tab.icon}
                 </svg>
                 {tab.id}
@@ -53,7 +54,8 @@ function Settings() {
           {activeTab === 'Profile' && <ProfileTab user={user} />}
           {activeTab === 'Security' && <SecurityTab />}
           {activeTab === 'Notifications' && <NotificationsTab />}
-          {['Preferences', 'Integrations', 'Billing', 'Team', 'Appearance'].includes(activeTab) && (
+          {activeTab === 'Appearance' && <AppearanceTab />}
+          {['Preferences', 'Integrations', 'Billing', 'Team'].includes(activeTab) && (
              <PlaceholderTab name={activeTab} />
           )}
         </div>
@@ -86,77 +88,77 @@ function ProfileTab({ user }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">Profile Information</h2>
-      <p className="text-sm text-gray-500 mb-8">Update your personal information and profile.</p>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Profile Information</h2>
+      <p className="text-sm text-gray-500 dark:text-slate-400 mb-8">Update your personal information and profile.</p>
 
       {/* Avatar Section */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-8 pb-8 border-b border-gray-100">
-        <div className="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-3xl font-bold shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-8 pb-8 border-b border-gray-100 dark:border-slate-800">
+        <div className="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-700 dark:text-indigo-400 text-3xl font-bold shadow-sm">
           {user?.name?.[0]?.toUpperCase() ?? 'U'}
         </div>
         <div>
           <div className="flex gap-3 mb-2">
-            <button className="text-sm font-medium bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition shadow-sm">
+            <button className="text-sm font-medium bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition shadow-sm">
               Change Photo
             </button>
-            <button className="text-sm font-medium text-red-600 px-4 py-2 hover:bg-red-50 rounded-lg transition">
+            <button className="text-sm font-medium text-red-600 dark:text-red-400 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition">
               Remove
             </button>
           </div>
-          <p className="text-xs text-gray-500">JPG, GIF or PNG. Max size of 2MB.</p>
+          <p className="text-xs text-gray-500 dark:text-slate-400">JPG, GIF or PNG. Max size of 2MB.</p>
         </div>
       </div>
 
       {/* Form Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5 mb-8">
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">Full name</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Full name</label>
           <input
             value={formData.name}
             onChange={(e) => setFormData({...formData, name: e.target.value})}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">Email address</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Email address</label>
           <input
             value={user?.email || ''}
             disabled
-            className="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2.5 text-sm text-gray-500 cursor-not-allowed"
+            className="w-full border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 rounded-lg px-3 py-2.5 text-sm text-gray-500 dark:text-slate-500 cursor-not-allowed"
           />
-          <p className="text-xs text-gray-500 mt-1.5">Email cannot be changed.</p>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5">Email cannot be changed.</p>
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">Phone number</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Phone number</label>
           <input
             value={formData.phone}
             onChange={(e) => setFormData({...formData, phone: e.target.value})}
             placeholder="(555) 123-4567"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500"
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">Job title</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Job title</label>
           <input
             value={formData.job_title}
             onChange={(e) => setFormData({...formData, job_title: e.target.value})}
             placeholder="Project Manager"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500"
           />
         </div>
         <div className="sm:col-span-2">
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">Company</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Company</label>
           <input
             value={formData.company}
             onChange={(e) => setFormData({...formData, company: e.target.value})}
             placeholder="Acme Corporation"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500"
           />
         </div>
       </div>
 
-      <div className="flex justify-end pt-6 border-t border-gray-100">
+      <div className="flex justify-end pt-6 border-t border-gray-100 dark:border-slate-800">
         <button
           onClick={handleSave}
           disabled={loading}
@@ -171,27 +173,27 @@ function ProfileTab({ user }) {
 
 function SecurityTab() {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">Change Password</h2>
-      <p className="text-sm text-gray-500 mb-8">Update your password to keep your account secure.</p>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Change Password</h2>
+      <p className="text-sm text-gray-500 dark:text-slate-400 mb-8">Update your password to keep your account secure.</p>
       
       <div className="flex flex-col gap-5 max-w-md mb-8">
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">Current password</label>
-          <input type="password" placeholder="Enter current password" className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Current password</label>
+          <input type="password" placeholder="Enter current password" className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500" />
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">New password</label>
-          <input type="password" placeholder="Create new password" className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
-          <p className="text-xs text-gray-500 mt-1.5">Must be at least 8 characters long.</p>
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">New password</label>
+          <input type="password" placeholder="Create new password" className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500" />
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1.5">Must be at least 8 characters long.</p>
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1.5">Confirm new password</label>
-          <input type="password" placeholder="Confirm new password" className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Confirm new password</label>
+          <input type="password" placeholder="Confirm new password" className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500" />
         </div>
       </div>
       
-      <div className="pt-6 border-t border-gray-100">
+      <div className="pt-6 border-t border-gray-100 dark:border-slate-800">
          <button className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition shadow-sm">
            Update password
          </button>
@@ -206,9 +208,9 @@ function NotificationsTab() {
   })
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">Notifications</h2>
-      <p className="text-sm text-gray-500 mb-8">Choose how you want to be notified.</p>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Notifications</h2>
+      <p className="text-sm text-gray-500 dark:text-slate-400 mb-8">Choose how you want to be notified.</p>
       
       <div className="flex flex-col gap-6">
         {[
@@ -217,14 +219,14 @@ function NotificationsTab() {
           { id: 'weekly', title: 'Weekly digest', desc: 'A weekly summary of your business performance.', val: notifs.weekly },
           { id: 'marketing', title: 'Marketing emails', desc: 'Receive news, special offers and tips.', val: notifs.marketing },
         ].map((item) => (
-          <div key={item.id} className="flex items-center justify-between pb-6 border-b border-gray-50 last:border-0 last:pb-0">
+          <div key={item.id} className="flex items-center justify-between pb-6 border-b border-gray-50 dark:border-slate-800/50 last:border-0 last:pb-0">
             <div className="pr-4">
-               <h3 className="text-sm font-medium text-gray-900 mb-1">{item.title}</h3>
-               <p className="text-sm text-gray-500">{item.desc}</p>
+               <h3 className="text-sm font-medium text-gray-900 dark:text-slate-200 mb-1">{item.title}</h3>
+               <p className="text-sm text-gray-500 dark:text-slate-400">{item.desc}</p>
             </div>
             <button
               onClick={() => setNotifs({...notifs, [item.id]: !item.val})}
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${item.val ? 'bg-indigo-600' : 'bg-gray-200'}`}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 ${item.val ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-slate-700'}`}
             >
               <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${item.val ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
@@ -235,14 +237,44 @@ function NotificationsTab() {
   )
 }
 
+function AppearanceTab() {
+  const { isDark, toggleTheme } = useTheme()
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Appearance</h2>
+      <p className="text-sm text-gray-500 dark:text-slate-400 mb-8">Customize the look and feel of your dashboard.</p>
+      
+      <div className="flex items-center justify-between pb-6">
+        <div className="pr-4">
+           <h3 className="text-sm font-medium text-gray-900 dark:text-slate-200 mb-1">Dark Mode</h3>
+           <p className="text-sm text-gray-500 dark:text-slate-400">Switch between light and dark themes.</p>
+        </div>
+        <button
+          onClick={toggleTheme}
+          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 ${isDark ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-slate-700'}`}
+        >
+          <span className={`pointer-events-none inline-flex items-center justify-center h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isDark ? 'translate-x-5' : 'translate-x-0'}`}>
+            {isDark ? (
+               <svg className="w-3 h-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            ) : (
+               <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            )}
+          </span>
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function PlaceholderTab({ name }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-12 flex flex-col items-center text-center">
-      <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-500 mb-4">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 sm:p-12 flex flex-col items-center text-center">
+      <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-500 dark:text-indigo-400 mb-4">
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
       </div>
-      <h2 className="text-xl font-bold text-gray-900 mb-2">{name} Settings</h2>
-      <p className="text-gray-500 max-w-sm mx-auto">This section is currently under development. Check back soon for new features!</p>
+      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{name} Settings</h2>
+      <p className="text-gray-500 dark:text-slate-400 max-w-sm mx-auto">This section is currently under development. Check back soon for new features!</p>
     </div>
   )
 }

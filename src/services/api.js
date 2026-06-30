@@ -63,6 +63,14 @@ export const getCustomers = async (search = '', status = '') => {
   return response.json()
 }
 
+export const getCustomerById = async (id) => {
+  const response = await fetch(`${BASE_URL}/customers/${id}`, {
+    headers: getHeaders()
+  })
+  if (!response.ok) throw new Error('Failed to fetch customer details')
+  return response.json()
+}
+
 export const createCustomer = async (data) => {
   const response = await fetch(`${BASE_URL}/customers`, {
     method: 'POST',
@@ -92,51 +100,11 @@ export const deleteCustomer = async (id) => {
   return response.json()
 }
 
-// Dashboard
-export const getDashboardStats = async () => {
-  const response = await fetch(`${BASE_URL}/dashboard/stats`, {
+// Dashboard — single consolidated call
+export const getDashboardSummary = async () => {
+  const response = await fetch(`${BASE_URL}/dashboard/summary`, {
     headers: getHeaders()
   })
-  if (!response.ok) throw new Error('Failed to fetch stats')
+  if (!response.ok) throw new Error('Failed to fetch dashboard data')
   return response.json()
-}
-
-// Mock Data for Charts (Until backend supports these)
-export const getRevenueData = async () => {
-  return [
-    { date: 'May 1', revenue: 12000 },
-    { date: 'May 6', revenue: 18000 },
-    { date: 'May 11', revenue: 22000 },
-    { date: 'May 16', revenue: 19000 },
-    { date: 'May 21', revenue: 28000 },
-    { date: 'May 26', revenue: 24000 },
-    { date: 'May 31', revenue: 42000 },
-  ]
-}
-
-export const getTasksOverview = async () => {
-  return [
-    { name: 'Completed', value: 14, color: '#22c55e' },
-    { name: 'In Progress', value: 6, color: '#3b82f6' },
-    { name: 'Pending', value: 4, color: '#eab308' },
-  ]
-}
-
-export const getDealsByStage = async () => {
-  return [
-    { stage: 'Leads', count: 120, color: '#6366f1' },
-    { stage: 'Qualified', count: 84, color: '#3b82f6' },
-    { stage: 'Proposal', count: 56, color: '#22c55e' },
-    { stage: 'Negotiation', count: 34, color: '#eab308' },
-    { stage: 'Closed', count: 18, color: '#ef4444' },
-  ]
-}
-
-export const getUpcomingTasks = async () => {
-  return [
-    { id: 1, title: 'Follow up with Acme Corporation', date: 'May 19, 2024', done: false },
-    { id: 2, title: 'Prepare proposal for Globex', date: 'May 20, 2024', done: false },
-    { id: 3, title: 'Monthly report for stakeholders', date: 'May 22, 2024', done: true },
-    { id: 4, title: 'Review contract – Initech LLC', date: 'May 23, 2024', done: true },
-  ]
 }

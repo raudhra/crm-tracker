@@ -46,47 +46,47 @@ function Signup() {
   }
 
   return (
-    <div className="min-h-screen flex bg-white font-sans">
+    <div className="min-h-screen flex bg-white dark:bg-slate-900 font-sans">
       {/* Left Panel - Illustration & Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-indigo-50 flex-col relative overflow-hidden items-center justify-center">
+      <div className="hidden lg:flex lg:w-1/2 bg-indigo-50 dark:bg-slate-800 flex-col relative overflow-hidden items-center justify-center">
         {/* Abstract Background Shapes */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-           <svg className="absolute w-full h-full text-indigo-100 opacity-50" viewBox="0 0 100 100" preserveAspectRatio="none">
+           <svg className="absolute w-full h-full text-indigo-100 dark:text-slate-700 opacity-50" viewBox="0 0 100 100" preserveAspectRatio="none">
              <path d="M100 0 C 80 100 50 100 0 0 Z" fill="currentColor"></path>
            </svg>
         </div>
 
         <div className="z-10 w-full max-w-lg px-12 pt-12 flex flex-col items-center text-center">
            <div className="flex items-center gap-2 mb-12 self-start absolute top-8 left-12">
-            <div className="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg shadow-sm">C</div>
-            <span className="text-xl font-bold text-gray-800 tracking-tight">ClientFlow</span>
+            <div className="bg-indigo-600 dark:bg-indigo-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg shadow-sm">C</div>
+            <span className="text-xl font-bold text-gray-800 dark:text-slate-200 tracking-tight">ClientFlow</span>
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 mt-16 leading-tight">Create your account</h1>
-          <p className="text-gray-600 text-lg mb-12">Join ClientFlow and streamline your<br/>business management.</p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 mt-16 leading-tight">Create your account</h1>
+          <p className="text-gray-600 dark:text-slate-400 text-lg mb-12">Join ClientFlow and streamline your<br/>business management.</p>
           
           {/* Mockup Illustration */}
           <div className="relative w-full max-w-md mt-4">
-             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 aspect-[4/3] flex flex-col z-20 relative">
+             <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 p-4 aspect-[4/3] flex flex-col z-20 relative">
                {/* Browser dots */}
-               <div className="flex gap-1.5 mb-4 border-b border-gray-50 pb-3">
-                 <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
-                 <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
-                 <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
+               <div className="flex gap-1.5 mb-4 border-b border-gray-50 dark:border-slate-800 pb-3">
+                 <div className="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-slate-700"></div>
+                 <div className="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-slate-700"></div>
+                 <div className="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-slate-700"></div>
                </div>
                
                {/* Dashboard mock */}
                <div className="flex-1 flex gap-3">
-                 <div className="w-1/4 bg-gray-50 rounded-lg flex flex-col gap-2 p-2">
-                   <div className="w-full h-3 bg-indigo-100 rounded"></div>
-                   <div className="w-full h-3 bg-gray-200 rounded"></div>
-                   <div className="w-full h-3 bg-gray-200 rounded"></div>
+                 <div className="w-1/4 bg-gray-50 dark:bg-slate-800 rounded-lg flex flex-col gap-2 p-2">
+                   <div className="w-full h-3 bg-indigo-100 dark:bg-indigo-900/40 rounded"></div>
+                   <div className="w-full h-3 bg-gray-200 dark:bg-slate-700 rounded"></div>
+                   <div className="w-full h-3 bg-gray-200 dark:bg-slate-700 rounded"></div>
                  </div>
                  <div className="flex-1 flex flex-col gap-3">
-                   <div className="h-1/3 w-full bg-gray-50 rounded-lg"></div>
+                   <div className="h-1/3 w-full bg-gray-50 dark:bg-slate-800 rounded-lg"></div>
                    <div className="flex-1 flex gap-3">
-                      <div className="w-1/2 bg-gray-50 rounded-lg"></div>
-                      <div className="w-1/2 bg-gray-50 rounded-lg"></div>
+                      <div className="w-1/2 bg-gray-50 dark:bg-slate-800 rounded-lg"></div>
+                      <div className="w-1/2 bg-gray-50 dark:bg-slate-800 rounded-lg"></div>
                    </div>
                  </div>
                </div>
@@ -107,39 +107,39 @@ function Signup() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 overflow-y-auto">
         <div className="w-full max-w-md my-auto">
           <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">C</div>
-            <span className="text-xl font-bold text-gray-800">ClientFlow</span>
+            <div className="bg-indigo-600 dark:bg-indigo-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">C</div>
+            <span className="text-xl font-bold text-gray-800 dark:text-slate-200">ClientFlow</span>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Create your account</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Create your account</h2>
 
           <form onSubmit={handleSignup} className="flex flex-col gap-5">
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1.5">Full name</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Full name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Doe"
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
+                className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white transition-shadow placeholder-gray-400 dark:placeholder-slate-500"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1.5">Email address</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Email address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@example.com"
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
+                className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white transition-shadow placeholder-gray-400 dark:placeholder-slate-500"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1.5">Password</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -147,7 +147,7 @@ function Signup() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create a password"
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow pr-10"
+                  className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white transition-shadow pr-10 placeholder-gray-400 dark:placeholder-slate-500"
                 />
                 <button
                   type="button"
@@ -166,7 +166,7 @@ function Signup() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1.5">Confirm password</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Confirm password</label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -174,7 +174,7 @@ function Signup() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow pr-10"
+                  className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white transition-shadow pr-10 placeholder-gray-400 dark:placeholder-slate-500"
                 />
                 <button
                   type="button"
@@ -198,10 +198,10 @@ function Signup() {
                   type="checkbox" 
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" 
+                  className="w-4 h-4 text-indigo-600 rounded border-gray-300 dark:border-slate-600 focus:ring-indigo-500 dark:bg-slate-800" 
                 />
-                <span className="text-sm text-gray-700">
-                  I agree to the <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Terms of Service</a> and <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+                <span className="text-sm text-gray-700 dark:text-slate-300">
+                  I agree to the <a href="#" className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Terms of Service</a> and <a href="#" className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Privacy Policy</a>
                 </span>
               </label>
             </div>
@@ -215,9 +215,9 @@ function Signup() {
             </button>
           </form>
 
-          <p className="mt-10 text-center text-sm text-gray-600">
+          <p className="mt-10 text-center text-sm text-gray-600 dark:text-slate-400">
             Already have an account?{' '}
-            <a href="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">Sign in</a>
+            <a href="/login" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Sign in</a>
           </p>
         </div>
       </div>

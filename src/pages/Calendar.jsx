@@ -65,10 +65,10 @@ function Calendar() {
 
   const getEventColor = (type) => {
     switch (type) {
-      case 'meeting': return 'bg-blue-100 text-blue-700 border-blue-200'
-      case 'task_due': return 'bg-orange-100 text-orange-700 border-orange-200'
-      case 'deal_close': return 'bg-green-100 text-green-700 border-green-200'
-      default: return 'bg-purple-100 text-purple-700 border-purple-200'
+      case 'meeting': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800'
+      case 'task_due': return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800'
+      case 'deal_close': return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800'
+      default: return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800'
     }
   }
 
@@ -83,18 +83,18 @@ function Calendar() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Calendar</h1>
-          <p className="text-gray-500 text-sm">Schedule meetings and track important deadlines.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Calendar</h1>
+          <p className="text-gray-500 dark:text-slate-400 text-sm">Schedule meetings and track important deadlines.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={prevMonth} className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
-             <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+          <button onClick={prevMonth} className="p-2 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition">
+             <svg className="w-5 h-5 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
-          <span className="font-bold text-gray-800 min-w-[120px] text-center">
+          <span className="font-bold text-gray-800 dark:text-slate-200 min-w-[120px] text-center">
             {format(currentDate, "MMMM yyyy")}
           </span>
-          <button onClick={nextMonth} className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
-             <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+          <button onClick={nextMonth} className="p-2 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition">
+             <svg className="w-5 h-5 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
           </button>
           <button
             onClick={() => handleDayClick(new Date())}
@@ -105,10 +105,10 @@ function Calendar() {
         </div>
       </div>
 
-      <div className="flex-1 bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-        <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50/50">
+      <div className="flex-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+        <div className="grid grid-cols-7 border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/50">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <div key={day} className="py-3 text-center text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
               {day}
             </div>
           ))}
@@ -123,8 +123,8 @@ function Calendar() {
               <div 
                 key={day.toString()} 
                 onClick={() => handleDayClick(day)}
-                className={`min-h-[120px] border-b border-r border-gray-100 p-2 cursor-pointer hover:bg-indigo-50/30 transition flex flex-col gap-1 ${
-                  !isCurrentMonth ? 'bg-gray-50/50 text-gray-400' : 'bg-white text-gray-900'
+                className={`min-h-[120px] border-b border-r border-gray-100 dark:border-slate-800/50 p-2 cursor-pointer hover:bg-indigo-50/30 dark:hover:bg-slate-800/50 transition flex flex-col gap-1 ${
+                  !isCurrentMonth ? 'bg-gray-50/50 dark:bg-slate-800/20 text-gray-400 dark:text-slate-600' : 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-200'
                 } ${idx % 7 === 6 ? 'border-r-0' : ''}`}
               >
                 <div className="flex justify-end">
@@ -186,43 +186,43 @@ function AddEventModal({ isOpen, onClose, onSubmit, selectedDate }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white rounded-2xl w-full max-w-md relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-900">New Event</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-md relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">New Event</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition">
              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
           <div>
-            <label className="text-sm font-medium text-gray-700 block mb-1.5">Event Title *</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Event Title *</label>
             <input 
               required
               value={title} 
               onChange={e => setTitle(e.target.value)} 
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+              className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white" 
               placeholder="e.g. Sync with Client" 
             />
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1.5">Date *</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Date *</label>
               <input 
                 required
                 type="date"
                 value={date} 
                 onChange={e => setDate(e.target.value)} 
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white [color-scheme:light] dark:[color-scheme:dark]" 
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1.5">Event Type</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Event Type</label>
               <select 
                 value={type}
                 onChange={e => setType(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
               >
                 <option value="meeting">Meeting</option>
                 <option value="custom">Custom</option>
@@ -231,16 +231,16 @@ function AddEventModal({ isOpen, onClose, onSubmit, selectedDate }) {
           </div>
           
           <div>
-            <label className="text-sm font-medium text-gray-700 block mb-1.5">Description</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Description</label>
             <textarea 
               value={description} 
               onChange={e => setDescription(e.target.value)} 
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[80px]" 
+              className="w-full border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-gray-900 dark:text-white min-h-[80px]" 
             />
           </div>
           
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
-             <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm">
+          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+             <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition shadow-sm">
                 Cancel
              </button>
              <button type="submit" className="flex-1 px-4 py-2.5 bg-indigo-600 rounded-lg text-sm font-medium text-white hover:bg-indigo-700 transition shadow-sm">

@@ -21,8 +21,8 @@ export const getCustomers = async () => {
   return response.json()
 }
 
-export const getDashboardStats = async () => {
-  const response = await fetch(`${BASE_URL}/dashboard/stats`, {
+export const getDashboardSummary = async () => {
+  const response = await fetch(`${BASE_URL}/dashboard/summary`, {
     headers: getHeaders()
   })
   return response.json()

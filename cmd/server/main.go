@@ -8,6 +8,7 @@ import (
 	"crm-tracker/internal/auth"
 	"crm-tracker/internal/calendar"
 	"crm-tracker/internal/customers"
+	"crm-tracker/internal/dashboard"
 	"crm-tracker/internal/database"
 	"crm-tracker/internal/deals"
 	"crm-tracker/internal/invoices"
@@ -68,6 +69,11 @@ func main() {
 	messageRepo := messages.NewRepository(db)
 	messageService := messages.NewService(messageRepo, authRepo)
 	messageHandler := messages.NewHandler(messageService)
+
+	// Initialize dashboard layer
+	dashboardRepo := dashboard.NewRepository(db)
+	dashboardService := dashboard.NewService(dashboardRepo)
+	dashboardHandler := dashboard.NewHandler(dashboardService)
 
 	// Setup Gin router
 	router := gin.Default()
@@ -133,7 +139,7 @@ func main() {
 		protected.GET("/messages", messageHandler.GetMessages)
 		protected.POST("/messages", messageHandler.CreateMessage)
 
-		protected.GET("/dashboard/stats", customerHandler.GetDashboardStats)
+		protected.GET("/dashboard/summary", dashboardHandler.GetSummary)
 	}
 
 	// Start server
