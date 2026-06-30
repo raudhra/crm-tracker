@@ -30,7 +30,7 @@ func Connect() *gorm.DB {
 	}
 
 	// Auto-migrate models
-	err = db.AutoMigrate(&models.User{}, &models.Customer{}, &models.Task{})
+	err = db.AutoMigrate(&models.User{}, &models.Customer{}, &models.Task{}, &models.Deal{}, &models.Invoice{}, &models.Event{}, &models.Message{})
 	if err != nil {
 		log.Fatal("Failed to auto-migrate:", err)
 	}

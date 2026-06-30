@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getTasks, createTask, updateTask, deleteTask, getCustomers } from '../api'
 import toast from 'react-hot-toast'
+import { motion, LayoutGroup } from 'framer-motion'
 
 function Tasks() {
   const [tasks, setTasks] = useState([])
@@ -8,6 +9,7 @@ function Tasks() {
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [draggedTaskId, setDraggedTaskId] = useState(null)
+  const [dragOverCol, setDragOverCol] = useState(null)
 
   useEffect(() => {
     loadData()
@@ -58,13 +60,20 @@ function Tasks() {
     e.dataTransfer.setData('text/plain', taskId)
   }
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e, colId) => {
     e.preventDefault()
     e.dataTransfer.dropEffect = 'move'
+    if (dragOverCol !== colId) setDragOverCol(colId)
+  }
+
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    setDragOverCol(null)
   }
 
   const handleDrop = async (e, newStatus) => {
     e.preventDefault()
+    setDragOverCol(null)
     if (!draggedTaskId) return
 
     const task = tasks.find(t => t.id === draggedTaskId)
@@ -119,7 +128,7 @@ function Tasks() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition shadow-sm flex items-center gap-2"
+          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           New Task
@@ -131,71 +140,85 @@ function Tasks() {
           <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
         </div>
       ) : (
-        <div className="flex-1 flex gap-6 overflow-x-auto pb-4 min-h-[500px]">
-          {columns.map(col => (
-            <div 
-              key={col.id} 
-              className={`flex-shrink-0 w-80 rounded-xl border ${col.color} p-4 flex flex-col`}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, col.id)}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-800">{col.title}</h3>
-                <span className="bg-white text-gray-500 text-xs px-2 py-1 rounded-full border border-gray-200 shadow-sm">
-                  {tasks.filter(t => t.status === col.id).length}
-                </span>
-              </div>
-              
-              <div className="flex-1 flex flex-col gap-3 min-h-[100px]">
-                {tasks.filter(t => t.status === col.id).map(task => (
-                  <div
-                    key={task.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, task.id)}
-                    className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow group relative"
-                  >
-                    <button 
-                      onClick={() => handleDeleteTask(task.id)}
-                      className="absolute top-3 right-3 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                    
-                    <div className="flex gap-2 mb-2 pr-6">
-                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${getPriorityColor(task.priority)}`}>
-                        {task.priority}
-                      </span>
+        <LayoutGroup>
+          <div className="flex-1 flex gap-6 overflow-x-auto pb-4 min-h-[500px]">
+            {columns.map(col => (
+              <motion.div 
+                layout
+                key={col.id} 
+                className={`flex-shrink-0 w-80 rounded-xl border ${col.color} p-4 flex flex-col transition-all duration-200
+                  ${dragOverCol === col.id ? 'ring-2 ring-indigo-400 scale-[1.02] shadow-lg' : ''}`}
+                onDragOver={(e) => handleDragOver(e, col.id)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, col.id)}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-800">{col.title}</h3>
+                  <span className="bg-white text-gray-500 text-xs px-2 py-1 rounded-full border border-gray-200 shadow-sm">
+                    {tasks.filter(t => t.status === col.id).length}
+                  </span>
+                </div>
+                
+                <div className="flex-1 flex flex-col gap-3 min-h-[100px]">
+                  {tasks.filter(t => t.status === col.id).length === 0 && (
+                    <div className="flex-1 border-2 border-dashed border-gray-300/50 rounded-lg flex items-center justify-center text-sm text-gray-400">
+                      Drop tasks here
                     </div>
-                    
-                    <h4 className="font-medium text-gray-900 mb-1">{task.title}</h4>
-                    {task.description && (
-                      <p className="text-sm text-gray-500 line-clamp-2 mb-3">{task.description}</p>
-                    )}
-                    
-                    {(task.customer_id || task.due_date) && (
-                      <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                        {task.customer_id && (
-                          <div className="flex items-center gap-1.5">
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            <span className="truncate max-w-[100px]">
-                              {customers.find(c => c.id === task.customer_id)?.name || 'Client'}
-                            </span>
-                          </div>
-                        )}
-                        {task.due_date && (
-                          <div className="flex items-center gap-1.5 ml-auto">
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            {new Date(task.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                          </div>
-                        )}
+                  )}
+                  {tasks.filter(t => t.status === col.id).map(task => (
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      key={task.id}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, task.id)}
+                      className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow group relative"
+                    >
+                      <button 
+                        onClick={() => handleDeleteTask(task.id)}
+                        className="absolute top-3 right-3 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                      </button>
+                      
+                      <div className="flex gap-2 mb-2 pr-6">
+                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${getPriorityColor(task.priority)}`}>
+                          {task.priority}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+                      
+                      <h4 className="font-medium text-gray-900 mb-1">{task.title}</h4>
+                      {task.description && (
+                        <p className="text-sm text-gray-500 line-clamp-2 mb-3">{task.description}</p>
+                      )}
+                      
+                      {(task.customer_id || task.due_date) && (
+                        <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                          {task.customer_id && (
+                            <div className="flex items-center gap-1.5">
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                              <span className="truncate max-w-[100px]">
+                                {customers.find(c => c.id === task.customer_id)?.name || 'Client'}
+                              </span>
+                            </div>
+                          )}
+                          {task.due_date && (
+                            <div className="flex items-center gap-1.5 ml-auto">
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                              {new Date(task.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </LayoutGroup>
       )}
     </div>
   )

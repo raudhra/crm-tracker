@@ -9,7 +9,11 @@ import Dashboard from './pages/Dashboard'
 import Customers from './pages/Customers'
 import Settings from './pages/Settings'
 import Tasks from './pages/Tasks'
-import { Deals, Invoices, Analytics, Calendar, Messages } from './pages/Placeholders'
+import Deals from './pages/Deals'
+import Invoices from './pages/Invoices'
+import Analytics from './pages/Analytics'
+import Calendar from './pages/Calendar'
+import Messages from './pages/Messages'
 
 function App() {
   return (

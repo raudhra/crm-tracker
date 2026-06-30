@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCustomers, createCustomer } from '../services/api'
 import toast from 'react-hot-toast'
+import { motion } from 'framer-motion'
 
 function Customers() {
   const [customers, setCustomers] = useState([])
@@ -62,7 +63,7 @@ function Customers() {
         </div>
         <button
           onClick={() => setAddCustomerOpen(true)}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition shadow-sm flex items-center gap-2"
+          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           Add Customer
@@ -125,7 +126,15 @@ function Customers() {
                 <th className="px-6 py-4 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <motion.tbody 
+              initial="hidden" 
+              animate="show" 
+              variants={{
+                hidden: { opacity: 0 },
+                show: { opacity: 1, transition: { staggerChildren: 0.04 } }
+              }}
+              className="divide-y divide-gray-100"
+            >
               {loading ? (
                 <tr>
                   <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
@@ -133,12 +142,27 @@ function Customers() {
                   </td>
                 </tr>
               ) : paginatedCustomers.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="px-6 py-12 text-center text-gray-500">No customers found.</td>
-                </tr>
+                <motion.tr variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}>
+                  <td colSpan="6" className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                      </div>
+                      <h3 className="text-gray-900 text-base font-semibold mb-1">No customers found</h3>
+                      <p className="text-gray-500 text-sm mb-4">Get started by creating a new customer record.</p>
+                      <button onClick={() => setAddCustomerOpen(true)} className="text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors active:scale-[0.98]">
+                        Add your first customer
+                      </button>
+                    </div>
+                  </td>
+                </motion.tr>
               ) : (
                 paginatedCustomers.map(customer => (
-                  <tr key={customer.id} className="hover:bg-gray-50/50 transition-colors group">
+                  <motion.tr 
+                    variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: { duration: 0.2 } } }}
+                    key={customer.id} 
+                    className="hover:bg-gray-50/60 transition-colors group"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         {customer.avatar ? (
@@ -176,10 +200,10 @@ function Customers() {
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
                       </button>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))
               )}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
         
