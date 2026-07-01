@@ -77,6 +77,9 @@ func main() {
 	dashboardHandler := dashboard.NewHandler(dashboardService)
 
 	// Setup Gin router
+	if os.Getenv("ENV") == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	router := gin.Default()
 
 	// CORS configuration
@@ -84,10 +87,17 @@ func main() {
 	var origins []string
 	if allowedOriginsStr != "" {
 		for _, o := range strings.Split(allowedOriginsStr, ",") {
-			origins = append(origins, strings.TrimSpace(o))
+			if trimmed := strings.TrimSpace(o); trimmed != "" {
+				origins = append(origins, trimmed)
+			}
 		}
 	}
-	if os.Getenv("ENV") == "development" || os.Getenv("ENV") == "" {
+
+	// Safe fallback to prevent Gin CORS panic if no origins are provided
+	if len(origins) == 0 {
+		origins = []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:3000"}
+	} else if os.Getenv("ENV") == "development" || os.Getenv("ENV") == "" {
+		// In development, ensure local origins are always included even if others are set
 		origins = append(origins, "http://localhost:5173", "http://localhost:5174", "http://localhost:3000")
 	}
 
