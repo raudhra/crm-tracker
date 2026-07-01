@@ -1,5 +1,4 @@
-export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
-const BASE_URL = API_BASE
+export const API_URL = import.meta.env.VITE_API_URL;
 
 const getHeaders = () => ({
   'Content-Type': 'application/json',
@@ -7,7 +6,7 @@ const getHeaders = () => ({
 })
 
 export const loginUser = async (email, password) => {
-  const response = await fetch(`${BASE_URL}/auth/login`, {
+  const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
@@ -16,21 +15,21 @@ export const loginUser = async (email, password) => {
 }
 
 export const getCustomers = async () => {
-  const response = await fetch(`${BASE_URL}/customers`, {
+  const response = await fetch(`${API_URL}/customers`, {
     headers: getHeaders()
   })
   return response.json()
 }
 
 export const getDashboardSummary = async () => {
-  const response = await fetch(`${BASE_URL}/dashboard/summary`, {
+  const response = await fetch(`${API_URL}/dashboard/summary`, {
     headers: getHeaders()
   })
   return response.json()
 }
 
 export const getTasks = async (status, customerId) => {
-  let url = `${BASE_URL}/tasks`
+  let url = `${API_URL}/tasks`
   const params = new URLSearchParams()
   if (status) params.append('status', status)
   if (customerId) params.append('customer_id', customerId)
@@ -41,7 +40,7 @@ export const getTasks = async (status, customerId) => {
 }
 
 export const createTask = async (taskData) => {
-  const response = await fetch(`${BASE_URL}/tasks`, {
+  const response = await fetch(`${API_URL}/tasks`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(taskData)
@@ -50,7 +49,7 @@ export const createTask = async (taskData) => {
 }
 
 export const updateTask = async (taskId, taskData) => {
-  const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+  const response = await fetch(`${API_URL}/tasks/${taskId}`, {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(taskData)
@@ -59,7 +58,7 @@ export const updateTask = async (taskId, taskData) => {
 }
 
 export const deleteTask = async (taskId) => {
-  const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+  const response = await fetch(`${API_URL}/tasks/${taskId}`, {
     method: 'DELETE',
     headers: getHeaders()
   })
@@ -67,7 +66,7 @@ export const deleteTask = async (taskId) => {
 }
 
 export const getDeals = async (stage, customerId) => {
-  let url = `${BASE_URL}/deals`
+  let url = `${API_URL}/deals`
   const params = new URLSearchParams()
   if (stage) params.append('stage', stage)
   if (customerId) params.append('customer_id', customerId)
@@ -78,7 +77,7 @@ export const getDeals = async (stage, customerId) => {
 }
 
 export const createDeal = async (dealData) => {
-  const response = await fetch(`${BASE_URL}/deals`, {
+  const response = await fetch(`${API_URL}/deals`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(dealData)
@@ -87,7 +86,7 @@ export const createDeal = async (dealData) => {
 }
 
 export const updateDeal = async (dealId, dealData) => {
-  const response = await fetch(`${BASE_URL}/deals/${dealId}`, {
+  const response = await fetch(`${API_URL}/deals/${dealId}`, {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(dealData)
@@ -96,7 +95,7 @@ export const updateDeal = async (dealId, dealData) => {
 }
 
 export const updateDealStage = async (dealId, stage) => {
-  const response = await fetch(`${BASE_URL}/deals/${dealId}/stage`, {
+  const response = await fetch(`${API_URL}/deals/${dealId}/stage`, {
     method: 'PATCH',
     headers: getHeaders(),
     body: JSON.stringify({ stage })
@@ -105,7 +104,7 @@ export const updateDealStage = async (dealId, stage) => {
 }
 
 export const deleteDeal = async (dealId) => {
-  const response = await fetch(`${BASE_URL}/deals/${dealId}`, {
+  const response = await fetch(`${API_URL}/deals/${dealId}`, {
     method: 'DELETE',
     headers: getHeaders()
   })
@@ -113,7 +112,7 @@ export const deleteDeal = async (dealId) => {
 }
 
 export const getInvoices = async (status, customerId) => {
-  let url = `${BASE_URL}/invoices`
+  let url = `${API_URL}/invoices`
   const params = new URLSearchParams()
   if (status) params.append('status', status)
   if (customerId) params.append('customer_id', customerId)
@@ -124,7 +123,7 @@ export const getInvoices = async (status, customerId) => {
 }
 
 export const createInvoice = async (invoiceData) => {
-  const response = await fetch(`${BASE_URL}/invoices`, {
+  const response = await fetch(`${API_URL}/invoices`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(invoiceData)
@@ -133,7 +132,7 @@ export const createInvoice = async (invoiceData) => {
 }
 
 export const updateInvoice = async (invoiceId, invoiceData) => {
-  const response = await fetch(`${BASE_URL}/invoices/${invoiceId}`, {
+  const response = await fetch(`${API_URL}/invoices/${invoiceId}`, {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(invoiceData)
@@ -142,7 +141,7 @@ export const updateInvoice = async (invoiceId, invoiceData) => {
 }
 
 export const deleteInvoice = async (invoiceId) => {
-  const response = await fetch(`${BASE_URL}/invoices/${invoiceId}`, {
+  const response = await fetch(`${API_URL}/invoices/${invoiceId}`, {
     method: 'DELETE',
     headers: getHeaders()
   })
@@ -150,7 +149,7 @@ export const deleteInvoice = async (invoiceId) => {
 }
 
 export const downloadInvoicePdf = async (invoiceId) => {
-  const response = await fetch(`${BASE_URL}/invoices/${invoiceId}/pdf`, {
+  const response = await fetch(`${API_URL}/invoices/${invoiceId}/pdf`, {
     headers: getHeaders()
   })
   if (!response.ok) throw new Error('Failed to generate PDF')
@@ -167,37 +166,37 @@ export const downloadInvoicePdf = async (invoiceId) => {
 }
 
 export const getAnalyticsRevenue = async () => {
-  const response = await fetch(`${BASE_URL}/analytics/revenue`, { headers: getHeaders() })
+  const response = await fetch(`${API_URL}/analytics/revenue`, { headers: getHeaders() })
   return response.json()
 }
 
 export const getAnalyticsPipeline = async () => {
-  const response = await fetch(`${BASE_URL}/analytics/pipeline`, { headers: getHeaders() })
+  const response = await fetch(`${API_URL}/analytics/pipeline`, { headers: getHeaders() })
   return response.json()
 }
 
 export const getAnalyticsCustomers = async () => {
-  const response = await fetch(`${BASE_URL}/analytics/customers`, { headers: getHeaders() })
+  const response = await fetch(`${API_URL}/analytics/customers`, { headers: getHeaders() })
   return response.json()
 }
 
 export const getAnalyticsTasks = async () => {
-  const response = await fetch(`${BASE_URL}/analytics/tasks`, { headers: getHeaders() })
+  const response = await fetch(`${API_URL}/analytics/tasks`, { headers: getHeaders() })
   return response.json()
 }
 
 export const getAnalyticsMetrics = async () => {
-  const response = await fetch(`${BASE_URL}/analytics/metrics`, { headers: getHeaders() })
+  const response = await fetch(`${API_URL}/analytics/metrics`, { headers: getHeaders() })
   return response.json()
 }
 
 export const getCalendarEvents = async () => {
-  const response = await fetch(`${BASE_URL}/calendar/events`, { headers: getHeaders() })
+  const response = await fetch(`${API_URL}/calendar/events`, { headers: getHeaders() })
   return response.json()
 }
 
 export const createCalendarEvent = async (eventData) => {
-  const response = await fetch(`${BASE_URL}/calendar/events`, {
+  const response = await fetch(`${API_URL}/calendar/events`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(eventData)
@@ -206,14 +205,14 @@ export const createCalendarEvent = async (eventData) => {
 }
 
 export const getMessages = async (customerId, afterId = null) => {
-  let url = `${BASE_URL}/messages?customer_id=${customerId}`
+  let url = `${API_URL}/messages?customer_id=${customerId}`
   if (afterId) url += `&after=${afterId}`
   const response = await fetch(url, { headers: getHeaders() })
   return response.json()
 }
 
 export const createMessage = async (messageData) => {
-  const response = await fetch(`${BASE_URL}/messages`, {
+  const response = await fetch(`${API_URL}/messages`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(messageData)

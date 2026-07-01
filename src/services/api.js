@@ -1,5 +1,4 @@
-export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
-const BASE_URL = API_BASE
+export const API_URL = import.meta.env.VITE_API_URL;
 
 const getHeaders = () => ({
   'Content-Type': 'application/json',
@@ -8,7 +7,7 @@ const getHeaders = () => ({
 
 // Auth
 export const loginUser = async (email, password) => {
-  const response = await fetch(`${BASE_URL}/auth/login`, {
+  const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
@@ -21,7 +20,7 @@ export const loginUser = async (email, password) => {
 }
 
 export const signupUser = async (name, email, password) => {
-  const response = await fetch(`${BASE_URL}/auth/register`, {
+  const response = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, password })
@@ -34,7 +33,7 @@ export const signupUser = async (name, email, password) => {
 }
 
 export const getProfile = async () => {
-  const response = await fetch(`${BASE_URL}/auth/me`, {
+  const response = await fetch(`${API_URL}/auth/me`, {
     headers: getHeaders()
   })
   if (!response.ok) throw new Error('Failed to fetch profile')
@@ -42,7 +41,7 @@ export const getProfile = async () => {
 }
 
 export const updateProfile = async (data) => {
-  const response = await fetch(`${BASE_URL}/auth/profile`, {
+  const response = await fetch(`${API_URL}/auth/profile`, {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(data)
@@ -57,7 +56,7 @@ export const getCustomers = async (search = '', status = '') => {
   if (search) query.append('search', search)
   if (status && status !== 'All') query.append('status', status)
   
-  const response = await fetch(`${BASE_URL}/customers?${query.toString()}`, {
+  const response = await fetch(`${API_URL}/customers?${query.toString()}`, {
     headers: getHeaders()
   })
   if (!response.ok) throw new Error('Failed to fetch customers')
@@ -65,7 +64,7 @@ export const getCustomers = async (search = '', status = '') => {
 }
 
 export const getCustomerById = async (id) => {
-  const response = await fetch(`${BASE_URL}/customers/${id}`, {
+  const response = await fetch(`${API_URL}/customers/${id}`, {
     headers: getHeaders()
   })
   if (!response.ok) throw new Error('Failed to fetch customer details')
@@ -73,7 +72,7 @@ export const getCustomerById = async (id) => {
 }
 
 export const createCustomer = async (data) => {
-  const response = await fetch(`${BASE_URL}/customers`, {
+  const response = await fetch(`${API_URL}/customers`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data)
@@ -83,7 +82,7 @@ export const createCustomer = async (data) => {
 }
 
 export const updateCustomer = async (id, data) => {
-  const response = await fetch(`${BASE_URL}/customers/${id}`, {
+  const response = await fetch(`${API_URL}/customers/${id}`, {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(data)
@@ -93,7 +92,7 @@ export const updateCustomer = async (id, data) => {
 }
 
 export const deleteCustomer = async (id) => {
-  const response = await fetch(`${BASE_URL}/customers/${id}`, {
+  const response = await fetch(`${API_URL}/customers/${id}`, {
     method: 'DELETE',
     headers: getHeaders()
   })
@@ -103,7 +102,7 @@ export const deleteCustomer = async (id) => {
 
 // Dashboard — single consolidated call
 export const getDashboardSummary = async () => {
-  const response = await fetch(`${BASE_URL}/dashboard/summary`, {
+  const response = await fetch(`${API_URL}/dashboard/summary`, {
     headers: getHeaders()
   })
   if (!response.ok) throw new Error('Failed to fetch dashboard data')
