@@ -98,7 +98,7 @@ function Invoices() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
+          className="w-full sm:w-auto justify-center bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           New Invoice
@@ -107,7 +107,8 @@ function Invoices() {
 
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col min-h-[400px]">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          {/* Desktop Table */}
+          <table className="hidden md:table w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 <th className="px-6 py-4">Invoice</th>
@@ -203,6 +204,70 @@ function Invoices() {
               )}
             </motion.tbody>
           </table>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden flex flex-col divide-y divide-gray-100 dark:divide-slate-800">
+            {loading ? (
+              <div className="px-6 py-12 text-center text-gray-500">
+                <div className="flex justify-center"><div className="w-6 h-6 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>
+              </div>
+            ) : invoices.length === 0 ? (
+              <div className="px-6 py-16 text-center">
+                <div className="flex flex-col items-center justify-center">
+                  <div className="w-16 h-16 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                  </div>
+                  <h3 className="text-gray-900 dark:text-slate-200 text-base font-semibold mb-1">No invoices found</h3>
+                  <button onClick={() => setIsModalOpen(true)} className="mt-4 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors active:scale-[0.98]">
+                    Create your first invoice
+                  </button>
+                </div>
+              </div>
+            ) : (
+              invoices.map(invoice => (
+                <div key={invoice.id} className="p-4 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <div className="font-semibold text-gray-900 dark:text-slate-200 text-base flex items-center gap-2">
+                        {invoice.invoice_number}
+                        {getStatusBadge(invoice.status)}
+                      </div>
+                      <div className="text-sm font-medium text-gray-600 dark:text-slate-400 mt-1">
+                        {getCustomerName(invoice.customer_id)}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button 
+                        onClick={() => handleDownloadPdf(invoice.id)}
+                        disabled={downloadingId === invoice.id}
+                        className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition p-2 rounded-full hover:bg-indigo-50 dark:hover:bg-indigo-900/30 disabled:opacity-50"
+                      >
+                        {downloadingId === invoice.id ? (
+                          <div className="w-5 h-5 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                        ) : (
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        )}
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(invoice.id)}
+                        className="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="text-gray-500 dark:text-slate-400">
+                      Due: {new Date(invoice.due_date).toLocaleDateString()}
+                    </div>
+                    <div className="font-bold text-gray-900 dark:text-slate-200">
+                      {formatCurrency(invoice.total_amount)}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -271,15 +336,15 @@ function AddInvoiceModal({ isOpen, onClose, onSubmit, customers }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-2xl relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 md:rounded-2xl w-full h-full md:h-auto md:max-h-[90vh] md:max-w-2xl relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-20 shrink-0">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">New Invoice</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition">
              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 overflow-y-auto">
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 flex-1 overflow-y-auto custom-scrollbar">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Customer *</label>
@@ -392,7 +457,7 @@ function AddInvoiceModal({ isOpen, onClose, onSubmit, customers }) {
             </div>
           </div>
           
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100 dark:border-slate-800 sticky bottom-[-24px] bg-white dark:bg-slate-900 pb-6 pt-4 z-20 shrink-0">
              <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition shadow-sm">
                 Cancel
              </button>

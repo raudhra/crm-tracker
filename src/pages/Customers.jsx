@@ -89,7 +89,7 @@ function Customers() {
         </div>
         <button
           onClick={openCreateModal}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
+          className="w-full sm:w-auto justify-center bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           Add Customer
@@ -139,9 +139,11 @@ function Customers() {
           </div>
         </div>
 
-        {/* Table */}
+        {/* Table / Mobile Cards */}
         <div className="overflow-x-auto min-h-[400px]">
-          <table className="w-full text-left border-collapse">
+          
+          {/* Desktop Table */}
+          <table className="hidden md:table w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800 text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 <th className="px-6 py-4">Customer</th>
@@ -235,6 +237,67 @@ function Customers() {
               )}
             </motion.tbody>
           </table>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden flex flex-col divide-y divide-gray-100 dark:divide-slate-800">
+            {loading ? (
+              <div className="px-6 py-12 text-center text-gray-500">
+                <div className="flex justify-center"><div className="w-6 h-6 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>
+              </div>
+            ) : paginatedCustomers.length === 0 ? (
+              <div className="px-6 py-16 text-center">
+                <div className="flex flex-col items-center justify-center">
+                  <div className="w-16 h-16 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                  </div>
+                  <h3 className="text-gray-900 dark:text-slate-200 text-base font-semibold mb-1">No customers found</h3>
+                  <button onClick={openCreateModal} className="mt-4 text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-4 py-2 rounded-lg text-sm font-medium">
+                    Add your first customer
+                  </button>
+                </div>
+              </div>
+            ) : (
+              paginatedCustomers.map(customer => (
+                <div key={customer.id} onClick={() => handleRowClick(customer.id)} className="p-4 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors relative cursor-pointer group">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      {customer.avatar ? (
+                        <img src={customer.avatar} alt={customer.name} className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-slate-700" />
+                      ) : (
+                        <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-base font-bold shadow-sm
+                          ${customer.status === 'Active' ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400' : 
+                            customer.status === 'Pending' ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-400' : 
+                            'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'}`}>
+                          {customer.name?.[0]?.toUpperCase() || 'C'}
+                        </div>
+                      )}
+                      <div>
+                        <div className="font-semibold text-gray-900 dark:text-slate-200 text-base">{customer.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-slate-400">{customer.email || '—'}</div>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={(e) => openEditModal(customer, e)}
+                      className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 p-2 rounded-full hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors z-10 relative"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border
+                      ${customer.status === 'Active' ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-100 dark:border-green-800' : 
+                        customer.status === 'Pending' ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-800' : 
+                        'bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700'}`}>
+                      {customer.status}
+                    </span>
+                    <span className="text-sm text-gray-500 dark:text-slate-400">
+                      {customer.phone || '—'}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
         
         {/* Pagination */}

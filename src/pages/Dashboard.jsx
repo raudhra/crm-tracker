@@ -109,10 +109,10 @@ function Dashboard() {
 
       <motion.div variants={containerVariants} initial="hidden" animate="show">
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           <motion.div variants={itemVariants}>
             <StatCard
-              title="Total Customers"
+              title="Customers"
               value={(stats.total_customers || 0).toLocaleString()}
               icon={<svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>}
               iconBg="bg-indigo-100"
@@ -142,7 +142,7 @@ function Dashboard() {
           </motion.div>
           <motion.div variants={itemVariants}>
             <StatCard
-              title="Tasks Completed"
+              title="Tasks Done"
               value={`${stats.completion_rate || 0}%`}
               subtitle={stats.tasks_total > 0 ? `${stats.tasks_completed} of ${stats.tasks_total}` : null}
               icon={<svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
@@ -170,8 +170,8 @@ function Dashboard() {
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#334155' : '#f1f5f9'} />
-                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: isDark ? '#94a3b8' : '#9ca3af', fontSize: 12}} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{fill: isDark ? '#94a3b8' : '#9ca3af', fontSize: 12}} tickFormatter={(val) => `$${val/1000}K`} />
+                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: isDark ? '#94a3b8' : '#9ca3af', fontSize: 12}} dy={10} minTickGap={20} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: isDark ? '#94a3b8' : '#9ca3af', fontSize: 12}} tickFormatter={(val) => `$${val/1000}K`} width={50} tickCount={5} />
                     <Tooltip content={<CustomTooltip formatter={(v) => `$${v.toLocaleString()}`} />} />
                     <Area type="monotone" dataKey="revenue" stroke="#6366f1" strokeWidth={3} fill="url(#colorRevenue)" activeDot={{ r: 6, strokeWidth: 0, fill: '#6366f1' }} isAnimationActive={true} animationDuration={800} animationEasing="ease-out" />
                   </AreaChart>
@@ -483,9 +483,9 @@ function StatCard({ title, value, subtitle, icon, iconBg, sparklineColor, isEmpt
             {icon}
           </div>
         </div>
-        <p className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">{title}</p>
+        <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-slate-400 mb-1 truncate">{title}</p>
         <div className="flex items-baseline gap-2">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
             {isEmpty ? value : <AnimatedCounter value={value} />}
           </h3>
         </div>

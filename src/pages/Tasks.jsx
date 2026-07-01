@@ -131,6 +131,27 @@ function Tasks() {
     }
   }
 
+  const [activeTab, setActiveTab] = useState(columns[0].id)
+  
+  const handleScroll = (e) => {
+    if (window.innerWidth >= 768) return
+    const scrollLeft = e.target.scrollLeft
+    const width = e.target.clientWidth
+    const index = Math.round(scrollLeft / width)
+    if (columns[index] && columns[index].id !== activeTab) {
+      setActiveTab(columns[index].id)
+    }
+  }
+  
+  const scrollToCol = (index) => {
+    const el = document.getElementById('kanban-container')
+    if (el) {
+      const width = el.clientWidth
+      el.scrollTo({ left: width * index, behavior: 'smooth' })
+      setActiveTab(columns[index].id)
+    }
+  }
+
   return (
     <div className="pb-8 h-full flex flex-col">
       <TaskModal
@@ -150,7 +171,7 @@ function Tasks() {
         </div>
         <button
           onClick={openCreateModal}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
+          className="w-full sm:w-auto justify-center bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           New Task
@@ -163,12 +184,29 @@ function Tasks() {
         </div>
       ) : (
         <LayoutGroup>
-          <div className="flex-1 flex gap-6 overflow-x-auto pb-4 max-h-[calc(100vh-200px)]">
+          {/* Mobile Tabs */}
+          <div className="md:hidden flex items-center gap-2 mb-4 overflow-x-auto pb-2 custom-scrollbar">
+            {columns.map((col, idx) => (
+              <button
+                key={col.id}
+                onClick={() => scrollToCol(idx)}
+                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${activeTab === col.id ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400' : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-slate-700'}`}
+              >
+                {col.title}
+              </button>
+            ))}
+          </div>
+
+          <div 
+            id="kanban-container"
+            onScroll={handleScroll}
+            className="flex-1 flex gap-4 md:gap-6 overflow-x-auto pb-4 max-h-[calc(100vh-200px)] snap-x snap-mandatory scroll-smooth"
+          >
             {columns.map(col => (
               <motion.div 
                 layout
                 key={col.id} 
-                className={`flex-shrink-0 w-80 rounded-xl border ${col.border} ${col.bg} flex flex-col overflow-y-auto custom-scrollbar transition-all duration-200
+                className={`snap-center snap-always flex-shrink-0 w-full min-w-[85vw] md:min-w-0 md:w-80 rounded-xl border ${col.border} ${col.bg} flex flex-col overflow-y-auto custom-scrollbar transition-all duration-200
                   ${dragOverCol === col.id ? 'ring-2 ring-indigo-400 shadow-lg bg-indigo-50/10 dark:bg-indigo-900/10' : ''}`}
                 onDragOver={(e) => handleDragOver(e, col.id)}
                 onDragLeave={handleDragLeave}

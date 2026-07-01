@@ -63,7 +63,7 @@ function TooltipWrapper({ children, text, isSidebarOpen }) {
   )
 }
 
-function Sidebar({ isSidebarOpen }) {
+function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -85,15 +85,24 @@ function Sidebar({ isSidebarOpen }) {
     navigate('/login')
   }
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <motion.div 
-      animate={{ width: isSidebarOpen ? 256 : 80 }}
+      animate={isMobile ? { x: isSidebarOpen ? 0 : -256, width: 256 } : { width: isSidebarOpen ? 256 : 80, x: 0 }}
+      initial={false}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="min-h-screen bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col relative z-20 transition-colors duration-200"
+      className={`min-h-screen bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col z-40 transition-colors duration-200 ${isMobile ? 'fixed inset-y-0 left-0 shadow-2xl' : 'relative'}`}
     >
       <div className={`p-6 flex items-center ${isSidebarOpen ? 'gap-3' : 'justify-center'} overflow-hidden whitespace-nowrap`}>
         <div className="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg shadow-sm shadow-indigo-200 dark:shadow-none flex-shrink-0">C</div>
-        {isSidebarOpen && <span className="font-bold text-xl text-gray-800 dark:text-white tracking-tight">ClientFlow</span>}
+        {(isSidebarOpen || isMobile) && <span className="font-bold text-xl text-gray-800 dark:text-white tracking-tight">ClientFlow</span>}
       </div>
 
       <nav className="flex-1 px-4 py-2 flex flex-col gap-1.5 overflow-y-auto custom-scrollbar overflow-x-hidden">
@@ -104,7 +113,7 @@ function Sidebar({ isSidebarOpen }) {
             <TooltipWrapper key={item.path} text={item.label} isSidebarOpen={isSidebarOpen}>
               <NavLink
                 to={item.path}
-                className={`relative flex items-center ${isSidebarOpen ? 'px-3 gap-3' : 'justify-center'} py-2.5 rounded-xl text-sm font-medium transition-colors duration-200
+                className={`relative flex items-center ${(isSidebarOpen || isMobile) ? 'px-3 gap-3' : 'justify-center'} py-2.5 rounded-xl text-sm font-medium transition-colors duration-200
                   ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-200'}`}
               >
                 {isActive && (
@@ -123,7 +132,7 @@ function Sidebar({ isSidebarOpen }) {
                 )}
                 <div className="relative z-10 flex items-center gap-3 w-full">
                   {item.icon}
-                  {isSidebarOpen && <span className="whitespace-nowrap">{item.label}</span>}
+                  {(isSidebarOpen || isMobile) && <span className="whitespace-nowrap">{item.label}</span>}
                 </div>
               </NavLink>
             </TooltipWrapper>
@@ -135,7 +144,7 @@ function Sidebar({ isSidebarOpen }) {
         <div className="relative">
           <button 
             onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-            className={`w-full flex items-center ${isSidebarOpen ? 'gap-3 px-3 py-2 justify-between' : 'justify-center p-2'} bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors duration-200`}
+            className={`w-full flex items-center ${(isSidebarOpen || isMobile) ? 'gap-3 px-3 py-2 justify-between' : 'justify-center p-2'} bg-gray-50 dark:bg-slate-800/50 rounded-xl border border-gray-100 dark:border-slate-800 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors duration-200`}
           >
             <div className="flex items-center gap-3 min-w-0">
               {user?.avatar ? (
@@ -145,14 +154,14 @@ function Sidebar({ isSidebarOpen }) {
                   {user?.name?.[0] ?? 'U'}
                 </div>
               )}
-              {isSidebarOpen && (
+              {(isSidebarOpen || isMobile) && (
                 <div className="overflow-hidden text-left min-w-0">
                   <p className="text-sm font-semibold text-gray-800 dark:text-slate-200 truncate">{user?.name ?? 'User'}</p>
                   <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{user?.email ?? ''}</p>
                 </div>
               )}
             </div>
-            {isSidebarOpen && (
+            {(isSidebarOpen || isMobile) && (
               <svg className="w-4 h-4 text-gray-400 dark:text-slate-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path></svg>
             )}
           </button>

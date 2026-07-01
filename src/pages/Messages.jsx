@@ -132,7 +132,7 @@ function Messages() {
     <div className="h-[calc(100vh-8rem)] flex bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
       
       {/* Left Sidebar - Customers List */}
-      <div className="w-1/3 border-r border-gray-100 dark:border-slate-800 flex flex-col bg-gray-50/30 dark:bg-slate-950/50">
+      <div className={`w-full md:w-1/3 border-r border-gray-100 dark:border-slate-800 flex-col bg-gray-50/30 dark:bg-slate-950/50 ${selectedCustomer ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Conversations</h2>
         </div>
@@ -165,7 +165,7 @@ function Messages() {
       </div>
 
       {/* Right Pane - Chat Thread */}
-      <div className="w-2/3 flex flex-col bg-white dark:bg-slate-900">
+      <div className={`w-full md:w-2/3 flex-col bg-white dark:bg-slate-900 ${selectedCustomer ? 'flex' : 'hidden md:flex'}`}>
         {!selectedCustomer ? (
           <div className="flex-1 flex flex-col items-center justify-center text-gray-400 dark:text-slate-500">
             <svg className="w-16 h-16 mb-4 text-gray-200 dark:text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
@@ -174,8 +174,11 @@ function Messages() {
           </div>
         ) : (
           <>
-            <div className="p-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between">
+            <div className="p-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between sticky top-0 z-10 shrink-0">
               <div className="flex items-center gap-3">
+                <button onClick={() => setSelectedCustomer(null)} className="md:hidden text-gray-500 hover:text-gray-700 dark:text-slate-400 p-1 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
                 <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 flex items-center justify-center font-bold">
                   {selectedCustomer.name.charAt(0).toUpperCase()}
                 </div>
@@ -211,12 +214,12 @@ function Messages() {
               <div ref={messagesEndRef} />
             </div>
             
-            <div className="p-4 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800">
-              <form onSubmit={handleSendMessage} className="flex gap-3">
+            <div className="p-4 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 shrink-0">
+              <form onSubmit={handleSendMessage} className="flex gap-2 sm:gap-3">
                 <select 
                   value={channel}
                   onChange={e => setChannel(e.target.value)}
-                  className="w-28 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50/50 dark:bg-slate-800 text-gray-900 dark:text-white"
+                  className="w-24 sm:w-28 border border-gray-200 dark:border-slate-700 rounded-lg px-2 sm:px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50/50 dark:bg-slate-800 text-gray-900 dark:text-white"
                 >
                   <option value="note">Note</option>
                   <option value="email">Email</option>
@@ -226,16 +229,16 @@ function Messages() {
                 <input
                   value={content}
                   onChange={e => setContent(e.target.value)}
-                  placeholder="Type a message or log an activity..."
-                  className="flex-1 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50/50 dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500"
+                  placeholder="Type a message..."
+                  className="flex-1 border border-gray-200 dark:border-slate-700 rounded-lg px-3 sm:px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50/50 dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 min-w-0"
                 />
                 <button 
                   type="submit"
                   disabled={!content.trim()}
-                  className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="bg-indigo-600 text-white px-3 sm:px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Send
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                  <span className="hidden sm:inline">Send</span>
+                  <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                 </button>
               </form>
             </div>

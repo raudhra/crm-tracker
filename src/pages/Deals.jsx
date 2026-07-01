@@ -126,6 +126,27 @@ function Deals() {
     return c ? c.name : 'Unknown Customer'
   }
 
+  const [activeTab, setActiveTab] = useState(columns[0].id)
+  
+  const handleScroll = (e) => {
+    if (window.innerWidth >= 768) return
+    const scrollLeft = e.target.scrollLeft
+    const width = e.target.clientWidth
+    const index = Math.round(scrollLeft / width)
+    if (columns[index] && columns[index].id !== activeTab) {
+      setActiveTab(columns[index].id)
+    }
+  }
+  
+  const scrollToCol = (index) => {
+    const el = document.getElementById('deals-kanban-container')
+    if (el) {
+      const width = el.clientWidth
+      el.scrollTo({ left: width * index, behavior: 'smooth' })
+      setActiveTab(columns[index].id)
+    }
+  }
+
   return (
     <div className="pb-8 h-full flex flex-col">
       <AddDealModal
@@ -153,7 +174,7 @@ function Deals() {
         </div>
         <button
           onClick={() => setIsNewModalOpen(true)}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
+          className="w-full sm:w-auto justify-center bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors active:scale-[0.98] shadow-sm flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           New Deal
@@ -166,7 +187,24 @@ function Deals() {
         </div>
       ) : (
         <LayoutGroup>
-          <div className="flex-1 flex gap-6 overflow-x-auto pb-4 max-h-[calc(100vh-200px)]">
+          {/* Mobile Tabs */}
+          <div className="md:hidden flex items-center gap-2 mb-4 overflow-x-auto pb-2 custom-scrollbar">
+            {columns.map((col, idx) => (
+              <button
+                key={col.id}
+                onClick={() => scrollToCol(idx)}
+                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${activeTab === col.id ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400' : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-slate-700'}`}
+              >
+                {col.title}
+              </button>
+            ))}
+          </div>
+
+          <div 
+            id="deals-kanban-container"
+            onScroll={handleScroll}
+            className="flex-1 flex gap-4 md:gap-6 overflow-x-auto pb-4 max-h-[calc(100vh-200px)] snap-x snap-mandatory scroll-smooth"
+          >
             {columns.map(col => {
               const columnDeals = deals.filter(d => d.stage === col.id)
               const totalValue = columnDeals.reduce((sum, d) => sum + (d.value || 0), 0)
@@ -175,7 +213,7 @@ function Deals() {
                 <motion.div 
                   layout
                   key={col.id} 
-                  className={`flex-shrink-0 w-80 rounded-xl border ${col.border} ${col.bg} flex flex-col overflow-y-auto custom-scrollbar transition-all duration-200
+                  className={`snap-center snap-always flex-shrink-0 w-full min-w-[85vw] md:min-w-0 md:w-80 rounded-xl border ${col.border} ${col.bg} flex flex-col overflow-y-auto custom-scrollbar transition-all duration-200
                     ${dragOverCol === col.id ? 'ring-2 ring-indigo-400 shadow-lg bg-indigo-50/10 dark:bg-indigo-900/10' : ''}`}
                   onDragOver={(e) => handleDragOver(e, col.id)}
                   onDragLeave={handleDragLeave}
@@ -279,15 +317,15 @@ function AddDealModal({ isOpen, onClose, onSubmit, customers }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-lg relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 md:rounded-2xl w-full h-full md:h-auto md:max-h-[90vh] md:max-w-lg relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-20 shrink-0">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">New Deal</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition">
              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 flex-1 overflow-y-auto custom-scrollbar">
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Deal Title *</label>
             <input 
@@ -365,7 +403,7 @@ function AddDealModal({ isOpen, onClose, onSubmit, customers }) {
             />
           </div>
           
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100 dark:border-slate-800 sticky bottom-[-24px] bg-white dark:bg-slate-900 pb-6 pt-4 z-20 shrink-0">
              <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition shadow-sm">
                 Cancel
              </button>
@@ -402,8 +440,8 @@ function EditDealModal({ deal, onClose, onSubmit, onDelete, customers }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-lg relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 md:rounded-2xl w-full h-full md:h-auto md:max-h-[90vh] md:max-w-lg relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-20 shrink-0">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Edit Deal</h2>
           <div className="flex items-center gap-2">
             <button type="button" onClick={onDelete} className="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 p-1.5 rounded-lg transition" title="Delete Deal">
@@ -415,7 +453,7 @@ function EditDealModal({ deal, onClose, onSubmit, onDelete, customers }) {
           </div>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 flex-1 overflow-y-auto custom-scrollbar">
           <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border border-gray-100 dark:border-slate-700 mb-2">
             <div className="text-xs text-gray-500 dark:text-slate-400 mb-1">Customer</div>
             <div className="font-semibold text-gray-900 dark:text-slate-200">{cName}</div>
@@ -463,7 +501,7 @@ function EditDealModal({ deal, onClose, onSubmit, onDelete, customers }) {
             />
           </div>
           
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100 dark:border-slate-800 sticky bottom-[-24px] bg-white dark:bg-slate-900 pb-6 pt-4 z-20 shrink-0">
              <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition shadow-sm">
                 Cancel
              </button>

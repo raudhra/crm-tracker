@@ -9,6 +9,7 @@ function Calendar() {
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
+  const [viewType, setViewType] = useState(typeof window !== 'undefined' && window.innerWidth < 768 ? 'agenda' : 'month')
 
   useEffect(() => {
     loadEvents()
@@ -63,6 +64,11 @@ function Calendar() {
     })
   }
 
+  const monthEvents = events.filter(e => {
+    if (!e.start_time) return false
+    return isSameMonth(parseISO(e.start_time), currentDate)
+  }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+
   const getEventColor = (type) => {
     switch (type) {
       case 'meeting': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800'
@@ -86,7 +92,21 @@ function Calendar() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Calendar</h1>
           <p className="text-gray-500 dark:text-slate-400 text-sm">Schedule meetings and track important deadlines.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="md:hidden flex bg-gray-100 dark:bg-slate-800 p-1 rounded-lg mr-1">
+            <button 
+              onClick={() => setViewType('agenda')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${viewType === 'agenda' ? 'bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-slate-400'}`}
+            >
+              Agenda
+            </button>
+            <button 
+              onClick={() => setViewType('month')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${viewType === 'month' ? 'bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-slate-400'}`}
+            >
+              Month
+            </button>
+          </div>
           <button onClick={prevMonth} className="p-2 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition">
              <svg className="w-5 h-5 text-gray-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
@@ -105,52 +125,79 @@ function Calendar() {
         </div>
       </div>
 
-      <div className="flex-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-        <div className="grid grid-cols-7 border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/50">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="py-3 text-center text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
-              {day}
+      {viewType === 'agenda' ? (
+        <div className="flex-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm p-4 overflow-y-auto">
+          {monthEvents.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-gray-500 py-12">
+              <svg className="w-12 h-12 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              <p>No events scheduled for {format(currentDate, "MMMM yyyy")}</p>
             </div>
-          ))}
+          ) : (
+            <div className="flex flex-col gap-3">
+              {monthEvents.map(event => (
+                <div key={event.id} className="border border-gray-100 dark:border-slate-800 rounded-xl p-4 flex gap-4">
+                  <div className="flex flex-col items-center justify-center min-w-[50px]">
+                    <span className="text-xs font-bold text-gray-400 uppercase">{format(parseISO(event.start_time), 'MMM')}</span>
+                    <span className="text-xl font-bold text-gray-900 dark:text-white">{format(parseISO(event.start_time), 'd')}</span>
+                  </div>
+                  <div className={`w-1 rounded-full ${getEventColor(event.type).split(' ')[0]}`}></div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-white">{event.title}</h4>
+                    <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 capitalize">{event.type.replace('_', ' ')}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="flex-1 grid grid-cols-7 auto-rows-fr">
-          {calendarDays.map((day, idx) => {
-            const isCurrentMonth = isSameMonth(day, monthStart)
-            const isToday = isSameDay(day, new Date())
-            const dayEvents = getEventsForDay(day)
-            
-            return (
-              <div 
-                key={day.toString()} 
-                onClick={() => handleDayClick(day)}
-                className={`min-h-[120px] border-b border-r border-gray-100 dark:border-slate-800/50 p-2 cursor-pointer hover:bg-indigo-50/30 dark:hover:bg-slate-800/50 transition flex flex-col gap-1 ${
-                  !isCurrentMonth ? 'bg-gray-50/50 dark:bg-slate-800/20 text-gray-400 dark:text-slate-600' : 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-200'
-                } ${idx % 7 === 6 ? 'border-r-0' : ''}`}
-              >
-                <div className="flex justify-end">
-                  <span className={`text-sm font-medium w-7 h-7 flex items-center justify-center rounded-full ${
-                    isToday ? 'bg-indigo-600 text-white' : ''
-                  }`}>
-                    {format(day, dateFormat)}
-                  </span>
-                </div>
-                
-                <div className="flex-1 overflow-y-auto space-y-1 mt-1 custom-scrollbar">
-                  {dayEvents.map(event => (
-                    <div 
-                      key={event.id} 
-                      className={`text-xs px-2 py-1 rounded border truncate font-medium ${getEventColor(event.type)}`}
-                      title={event.title}
-                    >
-                      {event.title}
-                    </div>
-                  ))}
-                </div>
+      ) : (
+        <div className="flex-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+          <div className="grid grid-cols-7 border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/50">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+              <div key={day} className="py-3 text-center text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                {day}
               </div>
-            )
-          })}
+            ))}
+          </div>
+          <div className="flex-1 grid grid-cols-7 auto-rows-fr">
+            {calendarDays.map((day, idx) => {
+              const isCurrentMonth = isSameMonth(day, monthStart)
+              const isToday = isSameDay(day, new Date())
+              const dayEvents = getEventsForDay(day)
+              
+              return (
+                <div 
+                  key={day.toString()} 
+                  onClick={() => handleDayClick(day)}
+                  className={`min-h-[120px] border-b border-r border-gray-100 dark:border-slate-800/50 p-2 cursor-pointer hover:bg-indigo-50/30 dark:hover:bg-slate-800/50 transition flex flex-col gap-1 ${
+                    !isCurrentMonth ? 'bg-gray-50/50 dark:bg-slate-800/20 text-gray-400 dark:text-slate-600' : 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-200'
+                  } ${idx % 7 === 6 ? 'border-r-0' : ''}`}
+                >
+                  <div className="flex justify-end">
+                    <span className={`text-sm font-medium w-7 h-7 flex items-center justify-center rounded-full ${
+                      isToday ? 'bg-indigo-600 text-white' : ''
+                    }`}>
+                      {format(day, dateFormat)}
+                    </span>
+                  </div>
+                  
+                  <div className="flex-1 overflow-y-auto space-y-1 mt-1 custom-scrollbar">
+                    {dayEvents.map(event => (
+                      <div 
+                        key={event.id} 
+                        className={`text-xs px-2 py-1 rounded border truncate font-medium ${getEventColor(event.type)}`}
+                        title={event.title}
+                      >
+                        {event.title}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -186,15 +233,15 @@ function AddEventModal({ isOpen, onClose, onSubmit, selectedDate }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-md relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 md:rounded-2xl w-full h-full md:h-auto md:max-h-[90vh] md:max-w-md relative z-10 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-20 shrink-0">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">New Event</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition">
              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 flex-1 overflow-y-auto custom-scrollbar">
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-slate-300 block mb-1.5">Event Title *</label>
             <input 
@@ -239,7 +286,7 @@ function AddEventModal({ isOpen, onClose, onSubmit, selectedDate }) {
             />
           </div>
           
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100 dark:border-slate-800 sticky bottom-[-24px] bg-white dark:bg-slate-900 pb-6 pt-4 z-20 shrink-0">
              <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition shadow-sm">
                 Cancel
              </button>

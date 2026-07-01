@@ -126,6 +126,9 @@ func (s *Service) UpdateProfile(userID uint, input UpdateProfileInput) (*models.
 
 func (s *Service) GenerateToken(userID uint) (string, error) {
 	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "default_jwt_secret_for_local_dev"
+	}
 
 	claims := jwt.MapClaims{
 		"user_id": userID,

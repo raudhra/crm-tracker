@@ -27,6 +27,9 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenString := parts[1]
 		secret := os.Getenv("JWT_SECRET")
+		if secret == "" {
+			secret = "default_jwt_secret_for_local_dev"
+		}
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
